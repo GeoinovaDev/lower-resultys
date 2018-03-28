@@ -3,7 +3,7 @@ package server
 import (
 	"bytes"
 	"fmt"
-	"git.resultys.com.br/framework/lower.git/library/config"
+	"git.resultys.com.br/framework/lower/library/config"
 	"log"
 	"net/http"
 	"net/url"
