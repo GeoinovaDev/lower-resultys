@@ -1,7 +1,6 @@
 package exec
 
 import (
-	"log"
 	"strings"
 )
 
@@ -30,8 +29,6 @@ func Try(code func()) (t *try) {
 
 			trying.throw = true
 			t = trying
-
-			log.Println(err)
 
 			if trying.cacheCatch {
 				trying.cbCatch(trying.err)

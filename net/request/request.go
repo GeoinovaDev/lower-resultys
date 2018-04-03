@@ -2,6 +2,7 @@ package request
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -10,14 +11,14 @@ import (
 	"time"
 )
 
-type requestError struct {
-	When time.Time
-	What string
-}
+// type requestError struct {
+// 	When time.Time
+// 	What string
+// }
 
-func (e requestError) Error() string {
-	return e.What
-}
+// func (e requestError) Error() string {
+// 	return e.What
+// }
 
 var ProxyUrl string = ""
 
@@ -45,22 +46,22 @@ func createClient() *http.Client {
 	}
 }
 
-func Get(url string) (text string, erro *requestError) {
+func Get(url string) (text string, erro error) {
 	resp, err1 := createClient().Get(url)
 	if err1 != nil {
-		return "", &requestError{What: "error ao conectar a url"}
+		return "", errors.New("error ao conectar a url")
 	}
 
 	defer resp.Body.Close()
 	body, err2 := ioutil.ReadAll(resp.Body)
 	if err2 != nil {
-		return "", &requestError{What: "erro ao ler o conteudo do body"}
+		return "", errors.New("erro ao ler o conteudo do body")
 	}
 
 	return string(body), nil
 }
 
-func GetJson(url string, obj interface{}) *requestError {
+func GetJson(url string, obj interface{}) error {
 	text, err := Get(url)
 	if err != nil {
 		return err
@@ -71,45 +72,45 @@ func GetJson(url string, obj interface{}) *requestError {
 	return nil
 }
 
-func Post(url string, formData url.Values) (string, *requestError) {
+func Post(url string, formData url.Values) (string, error) {
 	req, err := http.NewRequest("POST", url, strings.NewReader(formData.Encode()))
 	if err != nil {
-		return "", &requestError{What: "erro ao criar o post"}
+		return "", errors.New("erro ao criar o post")
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, err := createClient().Do(req)
 	if err != nil {
-		return "", &requestError{What: "erro ao conectar ao servidor"}
+		return "", errors.New("erro ao conectar ao servidor")
 	}
 
 	body, err1 := ioutil.ReadAll(resp.Body)
 	if err1 != nil {
-		return "", &requestError{What: "erro ao ler os dados de retorno do post"}
+		return "", errors.New("erro ao ler os dados de retorno do post")
 	}
 
 	return string(body), nil
 }
 
-func PostJson(url string, obj interface{}) (string, *requestError) {
+func PostJson(url string, obj interface{}) (string, error) {
 	_json, err := json.Marshal(obj)
 	if err != nil {
-		return "", &requestError{What: "erro ao codificar o json"}
+		return "", errors.New("erro ao codificar o json")
 	}
 
 	req, err := http.NewRequest("POST", url, strings.NewReader(string(_json)))
 	if err != nil {
-		return "", &requestError{What: "erro ao criar o post"}
+		return "", errors.New("erro ao criar o post")
 	}
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := createClient().Do(req)
 	if err != nil {
-		return "", &requestError{What: "erro ao conectar ao servidor"}
+		return "", errors.New("erro ao conectar ao servidor")
 	}
 
 	body, err1 := ioutil.ReadAll(resp.Body)
 	if err1 != nil {
-		return "", &requestError{What: "erro ao ler os dados de retorno do post"}
+		return "", errors.New("erro ao ler os dados de retorno do post")
 	}
 
 	return string(body), nil
