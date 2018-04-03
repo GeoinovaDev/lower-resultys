@@ -1,7 +1,7 @@
 package process
 
 import (
-	"git.resultys.com.br/framework/lower/exception"
+	"errors"
 	"os"
 	"os/exec"
 )
@@ -11,11 +11,11 @@ type Proc struct {
 	state   *os.ProcessState
 }
 
-func Start(program string) (proc *Proc, err *exception.Error) {
+func Start(program string) (proc *Proc, err error) {
 	cmd := exec.Command(program)
 	err1 := cmd.Start()
 	if err1 != nil {
-		return nil, &exception.Error{What: "processo nao encontrado"}
+		return nil, erros.New("processo nao encontrado")
 	}
 
 	return &Proc{process: cmd.Process, state: cmd.ProcessState}, nil

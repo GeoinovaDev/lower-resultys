@@ -11,15 +11,6 @@ import (
 	"time"
 )
 
-// type requestError struct {
-// 	When time.Time
-// 	What string
-// }
-
-// func (e requestError) Error() string {
-// 	return e.What
-// }
-
 var ProxyUrl string = ""
 
 func createClient() *http.Client {
