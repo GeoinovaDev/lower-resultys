@@ -8,7 +8,7 @@ import (
 var File = "./config.json"
 
 func readFile() []byte {
-	raw, err := ioutil.ReadFile("./config.json")
+	raw, err := ioutil.ReadFile(File)
 	if err != nil {
 		panic("não foi possivel ler o arquivo config.json")
 	}
