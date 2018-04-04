@@ -2,11 +2,13 @@ package convert
 
 import (
 	"encoding/json"
+	"git.resultys.com.br/framework/lower/log"
 )
 
 func JsonToString(obj interface{}) string {
 	_json, err := json.Marshal(obj)
 	if err != nil {
+		log.Logger.Save(err.Error(), log.WARNING)
 		return ""
 	}
 

@@ -3,6 +3,7 @@ package request
 import (
 	"encoding/json"
 	"errors"
+	"git.resultys.com.br/framework/lower/log"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -25,6 +26,7 @@ func createClient() *http.Client {
 	if len(ProxyUrl) > 0 {
 		urlProxy, err := url.Parse(ProxyUrl)
 		if err != nil {
+			log.Logger.Save(err.Error(), log.PANIC)
 			panic("endereco do proxy esta errado")
 		}
 
@@ -40,12 +42,14 @@ func createClient() *http.Client {
 func Get(url string) (text string, erro error) {
 	resp, err1 := createClient().Get(url)
 	if err1 != nil {
+		log.Logger.Save(err1.Error(), log.WARNING)
 		return "", errors.New("error ao conectar a url")
 	}
 
 	defer resp.Body.Close()
 	body, err2 := ioutil.ReadAll(resp.Body)
 	if err2 != nil {
+		log.Logger.Save(err2.Error(), log.WARNING)
 		return "", errors.New("erro ao ler o conteudo do body")
 	}
 
@@ -55,6 +59,7 @@ func Get(url string) (text string, erro error) {
 func GetJson(url string, obj interface{}) error {
 	text, err := Get(url)
 	if err != nil {
+		log.Logger.Save(err.Error(), log.WARNING)
 		return err
 	}
 
@@ -66,17 +71,20 @@ func GetJson(url string, obj interface{}) error {
 func Post(url string, formData url.Values) (string, error) {
 	req, err := http.NewRequest("POST", url, strings.NewReader(formData.Encode()))
 	if err != nil {
+		log.Logger.Save(err.Error(), log.WARNING)
 		return "", errors.New("erro ao criar o post")
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, err := createClient().Do(req)
 	if err != nil {
+		log.Logger.Save(err.Error(), log.WARNING)
 		return "", errors.New("erro ao conectar ao servidor")
 	}
 
 	body, err1 := ioutil.ReadAll(resp.Body)
 	if err1 != nil {
+		log.Logger.Save(err1.Error(), log.WARNING)
 		return "", errors.New("erro ao ler os dados de retorno do post")
 	}
 
@@ -86,21 +94,25 @@ func Post(url string, formData url.Values) (string, error) {
 func PostJson(url string, obj interface{}) (string, error) {
 	_json, err := json.Marshal(obj)
 	if err != nil {
+		log.Logger.Save(err.Error(), log.WARNING)
 		return "", errors.New("erro ao codificar o json")
 	}
 
 	req, err := http.NewRequest("POST", url, strings.NewReader(string(_json)))
 	if err != nil {
+		log.Logger.Save(err.Error(), log.WARNING)
 		return "", errors.New("erro ao criar o post")
 	}
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := createClient().Do(req)
 	if err != nil {
+		log.Logger.Save(err.Error(), log.WARNING)
 		return "", errors.New("erro ao conectar ao servidor")
 	}
 
 	body, err1 := ioutil.ReadAll(resp.Body)
 	if err1 != nil {
+		log.Logger.Save(err1.Error(), log.WARNING)
 		return "", errors.New("erro ao ler os dados de retorno do post")
 	}
 

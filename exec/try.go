@@ -1,6 +1,7 @@
 package exec
 
 import (
+	"git.resultys.com.br/framework/lower/log"
 	"strings"
 )
 
@@ -18,21 +19,25 @@ func Try(code func()) (t *try) {
 	defer func() {
 		err := recover()
 		if err != nil {
+			msg := ""
 			switch err.(type) {
 			case string:
-				trying.err = err.(string)
+				msg = err.(string)
 			case []string:
-				trying.err = strings.Join(err.([]string), ". ")
+				msg = strings.Join(err.([]string), ". ")
 			default:
-				trying.err = "erro de runtime"
+				msg = "erro de runtime"
 			}
 
+			trying.err = msg
 			trying.throw = true
 			t = trying
 
 			if trying.cacheCatch {
 				trying.cbCatch(trying.err)
 			}
+
+			log.Logger.Save(trying.err, log.WARNING)
 
 			return
 		}

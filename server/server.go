@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"git.resultys.com.br/framework/lower/library/config"
-	"log"
+	"git.resultys.com.br/framework/lower/log"
 	"net/http"
 	"net/url"
 )
@@ -43,7 +43,7 @@ func OnGet(route string, handler func(QueryString) string) {
 		defer func() {
 			err := recover()
 			if err != nil {
-				log.Println(err)
+				log.Logger.Save(err.Error(), log.WARNING)
 			}
 		}()
 
@@ -58,7 +58,7 @@ func OnPost(route string, handler func(QueryString, string) string) {
 		defer func() {
 			err := recover()
 			if err != nil {
-				log.Println(err)
+				log.Logger.Save(err.Error(), log.WARNING)
 			}
 		}()
 
@@ -76,7 +76,7 @@ func On(route string, handler func() string) {
 		defer func() {
 			err := recover()
 			if err != nil {
-				log.Println(err)
+				log.Logger.Save(err.Error(), log.WARNING)
 			}
 		}()
 
@@ -87,7 +87,7 @@ func On(route string, handler func() string) {
 
 func Start() {
 	if listing {
-		log.Println("servidor ja esta em execucao")
+		log.Logger.Save("servidor ja esta em execucao", log.WARNING)
 		return
 	}
 
