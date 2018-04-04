@@ -14,6 +14,15 @@ func readFile() []byte {
 	return raw
 }
 
+func Exist() bool {
+	_, err := ioutil.ReadFile("./config.json")
+	if err != nil {
+		return false
+	}
+
+	return true
+}
+
 func Get(key string) string {
 	var obj map[string]string
 

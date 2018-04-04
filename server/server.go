@@ -22,7 +22,11 @@ func (qs QueryString) Get(key string) string {
 }
 
 func createServer() *http.Server {
-	port := config.Get("port")
+	port := Port
+
+	if config.Exist() {
+		port = config.Get("port")
+	}
 
 	if len(port) == 0 {
 		port = Port
