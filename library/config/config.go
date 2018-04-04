@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 )
 
+var File = "./config.json"
+
 func readFile() []byte {
 	raw, err := ioutil.ReadFile("./config.json")
 	if err != nil {
@@ -15,7 +17,7 @@ func readFile() []byte {
 }
 
 func Exist() bool {
-	_, err := ioutil.ReadFile("./config.json")
+	_, err := ioutil.ReadFile(File)
 	if err != nil {
 		return false
 	}
