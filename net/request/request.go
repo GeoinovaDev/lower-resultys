@@ -14,6 +14,15 @@ import (
 
 var ProxyUrl string = ""
 
+func UrlEncode(str string) string {
+	return url.PathEscape(str)
+}
+
+func UrlDecode(str string) string {
+	s, _ := url.PathUnescape(str)
+	return s
+}
+
 func createClient() *http.Client {
 	var transport = &http.Transport{
 		MaxIdleConns: 100,

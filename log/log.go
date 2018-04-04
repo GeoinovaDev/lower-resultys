@@ -12,7 +12,7 @@ type ILogger interface {
 type DefaultLogger struct {
 }
 
-var Logger ILogger = DefaultLogger
+var Logger ILogger = DefaultLogger{}
 
 func (d DefaultLogger) Save(message string, tpe int) {
 
