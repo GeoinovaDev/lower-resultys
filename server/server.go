@@ -43,7 +43,7 @@ func OnGet(route string, handler func(QueryString) string) {
 		defer func() {
 			err := recover()
 			if err != nil {
-				log.Logger.Save(err.Error(), log.WARNING)
+				log.Logger.Save(fmt.Sprint(err), log.WARNING)
 			}
 		}()
 
@@ -58,7 +58,7 @@ func OnPost(route string, handler func(QueryString, string) string) {
 		defer func() {
 			err := recover()
 			if err != nil {
-				log.Logger.Save(err.Error(), log.WARNING)
+				log.Logger.Save(fmt.Sprint(err), log.WARNING)
 			}
 		}()
 
@@ -76,7 +76,7 @@ func On(route string, handler func() string) {
 		defer func() {
 			err := recover()
 			if err != nil {
-				log.Logger.Save(err.Error(), log.WARNING)
+				log.Logger.Save(fmt.Sprint(err), log.WARNING)
 			}
 		}()
 
