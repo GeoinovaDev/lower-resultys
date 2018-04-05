@@ -3,6 +3,7 @@ package exec
 import (
 	"fmt"
 	"git.resultys.com.br/framework/lower/log"
+	"git.resultys.com.br/framework/lower/net/loopback"
 	"strings"
 )
 
@@ -40,7 +41,7 @@ func Try(code func()) (t *try) {
 				trying.cbCatch(trying.err)
 			}
 
-			log.Logger.Save(trying.err, log.WARNING)
+			log.Logger.Save(trying.err, log.WARNING, loopback.IP())
 
 			return
 		}

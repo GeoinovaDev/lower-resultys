@@ -4,6 +4,16 @@ import (
 	"net"
 )
 
+func IP() string {
+	ips := IPs()
+
+	if len(ips) == 0 {
+		return ""
+	} else {
+		return ips[0]
+	}
+}
+
 func IPs() []string {
 	ips := make([]string, 0)
 	addrs, err := net.InterfaceAddrs()

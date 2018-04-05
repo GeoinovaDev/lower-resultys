@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"git.resultys.com.br/framework/lower/library/config"
 	"git.resultys.com.br/framework/lower/log"
+	"git.resultys.com.br/framework/lower/net/loopback"
 	"net/http"
 	"net/url"
 )
@@ -43,7 +44,7 @@ func OnGet(route string, handler func(QueryString) string) {
 		defer func() {
 			err := recover()
 			if err != nil {
-				log.Logger.Save(fmt.Sprint(err), log.WARNING)
+				log.Logger.Save(fmt.Sprint(err), log.WARNING, loopback.IP())
 			}
 		}()
 
@@ -58,7 +59,7 @@ func OnPost(route string, handler func(QueryString, string) string) {
 		defer func() {
 			err := recover()
 			if err != nil {
-				log.Logger.Save(fmt.Sprint(err), log.WARNING)
+				log.Logger.Save(fmt.Sprint(err), log.WARNING, loopback.IP())
 			}
 		}()
 
@@ -76,7 +77,7 @@ func On(route string, handler func() string) {
 		defer func() {
 			err := recover()
 			if err != nil {
-				log.Logger.Save(fmt.Sprint(err), log.WARNING)
+				log.Logger.Save(fmt.Sprint(err), log.WARNING, loopback.IP())
 			}
 		}()
 
@@ -87,7 +88,7 @@ func On(route string, handler func() string) {
 
 func Start() {
 	if listing {
-		log.Logger.Save("servidor ja esta em execucao", log.WARNING)
+		log.Logger.Save("servidor ja esta em execucao", log.WARNING, loopback.IP())
 		return
 	}
 

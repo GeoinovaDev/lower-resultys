@@ -14,6 +14,6 @@ type DefaultLogger struct {
 
 var Logger ILogger = DefaultLogger{}
 
-func (d DefaultLogger) Save(message string, tpe int) {
+func (d DefaultLogger) Save(message string, tpe int, ip string) {
 
 }
