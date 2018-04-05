@@ -1,6 +1,7 @@
 package exec
 
 import (
+	"fmt"
 	"git.resultys.com.br/framework/lower/log"
 	"strings"
 )
@@ -25,6 +26,8 @@ func Try(code func()) (t *try) {
 				msg = err.(string)
 			case []string:
 				msg = strings.Join(err.([]string), ". ")
+			case error:
+				msg = fmt.Sprint(err)
 			default:
 				msg = "erro de runtime"
 			}
