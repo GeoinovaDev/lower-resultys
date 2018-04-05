@@ -5,7 +5,7 @@ import (
 )
 
 func IPs() []string {
-	ips := make([]string, 10)
+	ips := make([]string, 0)
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
 		return ips
