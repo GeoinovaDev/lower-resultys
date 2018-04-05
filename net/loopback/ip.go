@@ -4,7 +4,7 @@ import (
 	"net"
 )
 
-func IP() []string {
+func IPs() []string {
 	ips := make([]string, 10)
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
