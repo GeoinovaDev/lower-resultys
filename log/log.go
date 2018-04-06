@@ -6,7 +6,7 @@ const (
 )
 
 type ILogger interface {
-	Save(string, int)
+	Save(string, int, string)
 }
 
 type DefaultLogger struct {
