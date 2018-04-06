@@ -37,10 +37,9 @@ func createClient() *http.Client {
 		urlProxy, err := url.Parse(ProxyUrl)
 		if err != nil {
 			log.Logger.Save(err.Error(), log.PANIC, loopback.IP())
-			panic("endereco do proxy esta errado")
+		} else {
+			transport.Proxy = http.ProxyURL(urlProxy)
 		}
-
-		transport.Proxy = http.ProxyURL(urlProxy)
 	}
 
 	return &http.Client{
@@ -55,8 +54,8 @@ func Get(url string) (text string, erro error) {
 		log.Logger.Save(err1.Error(), log.WARNING, loopback.IP())
 		return "", errors.New("error ao conectar a url")
 	}
-
 	defer resp.Body.Close()
+
 	body, err2 := ioutil.ReadAll(resp.Body)
 	if err2 != nil {
 		log.Logger.Save(err2.Error(), log.WARNING, loopback.IP())
@@ -69,7 +68,6 @@ func Get(url string) (text string, erro error) {
 func GetJson(url string, obj interface{}) error {
 	text, err := Get(url)
 	if err != nil {
-		log.Logger.Save(err.Error(), log.WARNING, loopback.IP())
 		return err
 	}
 
@@ -113,6 +111,7 @@ func PostJson(url string, obj interface{}) (string, error) {
 		log.Logger.Save(err.Error(), log.WARNING, loopback.IP())
 		return "", errors.New("erro ao criar o post")
 	}
+
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := createClient().Do(req)
 	if err != nil {

@@ -13,7 +13,7 @@ func readFile() []byte {
 	raw, err := ioutil.ReadFile(File)
 	if err != nil {
 		log.Logger.Save("não foi possivel ler o arquivo config.json", log.PANIC, loopback.IP())
-		panic("não foi possivel ler o arquivo config.json")
+		raw = make([]byte, 0)
 	}
 
 	return raw
