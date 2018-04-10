@@ -5,6 +5,9 @@ import (
 	"git.resultys.com.br/framework/lower/net/loopback"
 )
 
+// Trying tenta executar a função em até 'tentativas' vezes.
+// Caso ocorra erro chama o callback err
+// Ao final da execução com erro ou não invoka o callback finish
 func Trying(tentativas int, code func(), err func(string), finish func()) {
 
 	for i := 0; i < tentativas; i++ {

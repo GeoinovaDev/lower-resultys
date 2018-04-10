@@ -4,6 +4,8 @@ import (
 	"git.resultys.com.br/framework/lower/library/convert"
 )
 
+// Protocol é o protocol utilizado para comunicação via rede contendo
+// Code, Status, Data, Message
 type Protocol struct {
 	Code    int         `json:"code"`
 	Status  string      `json:"status"`
@@ -11,6 +13,7 @@ type Protocol struct {
 	Message string      `json:"message"`
 }
 
-func (p *Protocol) ToJson() string {
-	return convert.JsonToString(p)
+// ToJSON converte o protocolo em string
+func (p *Protocol) ToJSON() string {
+	return convert.JSONToString(p)
 }

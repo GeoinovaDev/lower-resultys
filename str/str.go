@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+// Format injeta os parametros args[1]... no parametro args[0]
+// Retorna a string formatada
 func Format(arr ...string) string {
 	if len(arr) == 0 {
 		return ""

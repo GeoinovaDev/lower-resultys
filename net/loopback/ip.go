@@ -4,16 +4,18 @@ import (
 	"net"
 )
 
+// IP retorna o ip da instancia
 func IP() string {
 	ips := IPs()
 
 	if len(ips) == 0 {
 		return ""
-	} else {
-		return ips[0]
 	}
+
+	return ips[0]
 }
 
+// IPs retorna slice de todos ips encontrados da instancia
 func IPs() []string {
 	ips := make([]string, 0)
 	addrs, err := net.InterfaceAddrs()

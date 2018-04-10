@@ -2,11 +2,13 @@ package config
 
 import (
 	"encoding/json"
+	"io/ioutil"
+
 	"git.resultys.com.br/framework/lower/log"
 	"git.resultys.com.br/framework/lower/net/loopback"
-	"io/ioutil"
 )
 
+// File variável global contendo o filename default do config.json
 var File = "./config.json"
 
 func readFile() []byte {
@@ -19,6 +21,7 @@ func readFile() []byte {
 	return raw
 }
 
+// Exist verifica se o config.json existe
 func Exist() bool {
 	_, err := ioutil.ReadFile(File)
 	if err != nil {
@@ -28,6 +31,7 @@ func Exist() bool {
 	return true
 }
 
+// Save salva um objeto de configuração no config.json
 func Save(obj interface{}) error {
 	data, err := json.Marshal(obj)
 	if err != nil {
@@ -40,6 +44,7 @@ func Save(obj interface{}) error {
 	return nil
 }
 
+// Get retorna uma propriedade do config.json
 func Get(key string) string {
 	var obj map[string]string
 
@@ -49,6 +54,7 @@ func Get(key string) string {
 	return obj[key]
 }
 
+// LoadInto carrega o config.json em um objeto
 func LoadInto(to interface{}) {
 	raw := readFile()
 	json.Unmarshal(raw, &to)

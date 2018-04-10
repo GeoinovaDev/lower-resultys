@@ -2,12 +2,14 @@ package exec
 
 import (
 	"fmt"
+	"strings"
+
 	"git.resultys.com.br/framework/lower/log"
 	"git.resultys.com.br/framework/lower/net/loopback"
-	"strings"
 )
 
-type try struct {
+// TryExec é a estrutura contendo informações sobre a execução de uma função
+type TryExec struct {
 	err   string
 	throw bool
 
@@ -15,8 +17,9 @@ type try struct {
 	cbCatch    func(string)
 }
 
-func Try(code func()) (t *try) {
-	trying := &try{}
+// Try tenta executar a função passada por parametro não lançando excessão
+func Try(code func()) (t *TryExec) {
+	trying := &TryExec{}
 
 	defer func() {
 		err := recover()
@@ -52,7 +55,8 @@ func Try(code func()) (t *try) {
 	return trying
 }
 
-func (t *try) Catch(code func(string)) {
+// Catch executa a função passada por parametro caso ocorreu um erro no Try
+func (t *TryExec) Catch(code func(string)) {
 	t.cbCatch = code
 	t.cacheCatch = true
 

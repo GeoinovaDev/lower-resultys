@@ -2,11 +2,13 @@ package convert
 
 import (
 	"encoding/json"
+
 	"git.resultys.com.br/framework/lower/log"
 	"git.resultys.com.br/framework/lower/net/loopback"
 )
 
-func JsonToString(obj interface{}) string {
+// JSONToString converte um json em string
+func JSONToString(obj interface{}) string {
 	_json, err := json.Marshal(obj)
 	if err != nil {
 		log.Logger.Save(err.Error(), log.WARNING, loopback.IP())
@@ -16,10 +18,12 @@ func JsonToString(obj interface{}) string {
 	return string(_json)
 }
 
-func BytesToJson(bytes []byte, obj interface{}) {
+// BytesToJSON converte slice de bytes em objeto
+func BytesToJSON(bytes []byte, obj interface{}) {
 	json.Unmarshal(bytes, &obj)
 }
 
-func StringToJson(str string, obj interface{}) {
+// StringToJSON converte string em objeto
+func StringToJSON(str string, obj interface{}) {
 	json.Unmarshal([]byte(str), &obj)
 }

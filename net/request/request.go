@@ -3,51 +3,34 @@ package request
 import (
 	"encoding/json"
 	"errors"
-	"git.resultys.com.br/framework/lower/log"
-	"git.resultys.com.br/framework/lower/net/loopback"
 	"io/ioutil"
 	"net"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
+
+	"git.resultys.com.br/framework/lower/log"
+	"git.resultys.com.br/framework/lower/net/loopback"
 )
 
-var ProxyUrl string = ""
+// ProxyURL contem o endereco do proxy no formato: http://dominio
+var ProxyURL = ""
 
-func UrlEncode(str string) string {
+// URLEncode retorna a string codificada em url
+func URLEncode(str string) string {
 	return url.PathEscape(str)
 }
 
-func UrlDecode(str string) string {
+// URLDecode retorna a string decodifica em url
+func URLDecode(str string) string {
 	s, _ := url.PathUnescape(str)
 	return s
 }
 
-func createClient() *http.Client {
-	var transport = &http.Transport{
-		MaxIdleConns: 100,
-		Dial: (&net.Dialer{
-			Timeout: 5 * time.Second,
-		}).Dial,
-		TLSHandshakeTimeout: 5 * time.Second,
-	}
-
-	if len(ProxyUrl) > 0 {
-		urlProxy, err := url.Parse(ProxyUrl)
-		if err != nil {
-			log.Logger.Save(err.Error(), log.PANIC, loopback.IP())
-		} else {
-			transport.Proxy = http.ProxyURL(urlProxy)
-		}
-	}
-
-	return &http.Client{
-		Timeout:   10 * time.Second,
-		Transport: transport,
-	}
-}
-
+// Get faz um request GET para a url informada
+// Retorna o body como string e o error
+// Salva no sistema de log caso ocorra erro
 func Get(url string) (text string, erro error) {
 	resp, err1 := createClient().Get(url)
 	if err1 != nil {
@@ -65,7 +48,10 @@ func Get(url string) (text string, erro error) {
 	return string(body), nil
 }
 
-func GetJson(url string, obj interface{}) error {
+// GetJSON faz request GET para url informada.
+// Injeta o retorno no parametro obj
+// Retorna error ou nil
+func GetJSON(url string, obj interface{}) error {
 	text, err := Get(url)
 	if err != nil {
 		return err
@@ -76,6 +62,8 @@ func GetJson(url string, obj interface{}) error {
 	return nil
 }
 
+// Post faz uma requisição POST para url informada, submetendo o dados tipo form-urlencoded
+// Retorna a resposta em string e error
 func Post(url string, formData url.Values) (string, error) {
 	req, err := http.NewRequest("POST", url, strings.NewReader(formData.Encode()))
 	if err != nil {
@@ -99,7 +87,9 @@ func Post(url string, formData url.Values) (string, error) {
 	return string(body), nil
 }
 
-func PostJson(url string, obj interface{}) (string, error) {
+// PostJSON faz um requisição POST para url informada convertendo o objeto passado por parametro em json e com o cabeçalho do tipo application/json
+// Retorna o body como string e o error
+func PostJSON(url string, obj interface{}) (string, error) {
 	_json, err := json.Marshal(obj)
 	if err != nil {
 		log.Logger.Save(err.Error(), log.WARNING, loopback.IP())
@@ -126,4 +116,28 @@ func PostJson(url string, obj interface{}) (string, error) {
 	}
 
 	return string(body), nil
+}
+
+func createClient() *http.Client {
+	var transport = &http.Transport{
+		MaxIdleConns: 100,
+		Dial: (&net.Dialer{
+			Timeout: 5 * time.Second,
+		}).Dial,
+		TLSHandshakeTimeout: 5 * time.Second,
+	}
+
+	if len(ProxyURL) > 0 {
+		urlProxy, err := url.Parse(ProxyURL)
+		if err != nil {
+			log.Logger.Save(err.Error(), log.PANIC, loopback.IP())
+		} else {
+			transport.Proxy = http.ProxyURL(urlProxy)
+		}
+	}
+
+	return &http.Client{
+		Timeout:   10 * time.Second,
+		Transport: transport,
+	}
 }
