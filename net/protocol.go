@@ -1,7 +1,7 @@
 package net
 
 import (
-	"git.resultys.com.br/framework/lower/library/convert"
+	"git.resultys.com.br/framework/lower/convert"
 )
 
 // Protocol é o protocol utilizado para comunicação via rede contendo

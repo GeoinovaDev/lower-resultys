@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"git.resultys.com.br/framework/lower/library/config"
+	"git.resultys.com.br/framework/lower/config"
 	"git.resultys.com.br/framework/lower/log"
 	"git.resultys.com.br/framework/lower/net/loopback"
 )
