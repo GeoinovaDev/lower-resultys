@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"time"
 )
 
 type Proc struct {
@@ -14,11 +15,11 @@ type Proc struct {
 	state   *os.ProcessState
 }
 
-func Command(command string) {
+func Command(command string) (*Proc, error) {
 	if runtime.GOOS == "windows" {
-		Cmd(command)
+		return Cmd(command)
 	} else {
-		Bash(command)
+		return Bash(command)
 	}
 }
 
@@ -55,11 +56,16 @@ func Start(program string) (proc *Proc, err error) {
 	return &Proc{process: cmd.Process, state: cmd.ProcessState}, nil
 }
 
+func (p *Proc) GetId() int {
+	return p.process.Pid
+}
+
 func (p *Proc) Close() {
 	for {
 		err := p.process.Kill()
 		if err != nil {
 			log.Logger.Save(err.Error(), log.WARNING, loopback.IP())
+			time.Sleep(1 * time.Second)
 			continue
 		}
 		break

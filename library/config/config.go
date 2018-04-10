@@ -28,6 +28,18 @@ func Exist() bool {
 	return true
 }
 
+func Save(obj interface{}) error {
+	data, err := json.Marshal(obj)
+	if err != nil {
+		log.Logger.Save("não foi possivel salvar no arquivo config.json", log.WARNING, loopback.IP())
+		return err
+	}
+
+	ioutil.WriteFile(File, data, 755)
+
+	return nil
+}
+
 func Get(key string) string {
 	var obj map[string]string
 
