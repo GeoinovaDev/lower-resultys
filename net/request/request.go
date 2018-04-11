@@ -127,7 +127,7 @@ func createClient() *http.Client {
 		TLSHandshakeTimeout: 5 * time.Second,
 	}
 
-	if len(ProxyURL) > 0 {
+	if len(ProxyURL) > 5 {
 		urlProxy, err := url.Parse(ProxyURL)
 		if err != nil {
 			log.Logger.Save(err.Error(), log.PANIC, loopback.IP())
