@@ -56,6 +56,16 @@ func Cmd(command string, wait bool) *Proc {
 	return start("cmd", "/c", command)
 }
 
+// RunProgram executa um programa externo e esperar o retorno
+func RunProgram(cmd string) *Proc {
+	return run(cmd, "", "")
+}
+
+// StartProgram executa um programa externo e nao esperar o retorno
+func StartProgram(cmd string) *Proc {
+	return start(cmd, "", "")
+}
+
 func start(cmd, option, parameters string) *Proc {
 	process := command(cmd, option, parameters, func(process *exec.Cmd) error {
 		return process.Start()
