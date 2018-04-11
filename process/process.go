@@ -1,14 +1,13 @@
 package process
 
 import (
-	"errors"
 	"os"
 	"os/exec"
 	"runtime"
 	"time"
 
-	"git.resultys.com.br/framework/lower/log"
-	"git.resultys.com.br/framework/lower/net/loopback"
+	"git.resultys.com.br/lib/lower/log"
+	"git.resultys.com.br/lib/lower/net/loopback"
 )
 
 // Proc estrutura do processo seu estado
@@ -17,53 +16,72 @@ type Proc struct {
 	state   *os.ProcessState
 }
 
+// ExecuteAndWait executa o comando e espera sua conclusão independente de sistema operacional
+func ExecuteAndWait(command string) *Proc {
+	return Command(command, true)
+}
+
+// Execute executa o comando e não espera sua conclusão independente de sistema operacional
+func Execute(command string) *Proc {
+	return Command(command, false)
+}
+
 // Command executada um comando no cmd (windows) ou bash(linux) dependendo do ambiente de execução
 // Retorna o processo e error
-func Command(command string) (*Proc, error) {
+func Command(command string, wait bool) *Proc {
 	if runtime.GOOS == "windows" {
-		return Cmd(command)
+		return Cmd(command, wait)
 	} else {
-		return Bash(command)
+		return Bash(command, wait)
 	}
 }
 
 // Bash executa um comando no linux
 // Retorna o processo e error
-func Bash(command string) (*Proc, error) {
-	cmd := exec.Command("sh", "-c", command)
-	err := cmd.Run()
-	if err != nil {
-		log.Logger.Save(err.Error(), log.WARNING, loopback.IP())
-		return nil, errors.New("processo nao encontrado")
+func Bash(command string, wait bool) *Proc {
+	if wait {
+		return run("sh", "-c", command)
 	}
 
-	return &Proc{process: cmd.Process, state: cmd.ProcessState}, nil
+	return start("sh", "-c", command)
 }
 
 // Cmd executa um comando no windows
 // Retorna o processo e error
-func Cmd(command string) (*Proc, error) {
-	cmd := exec.Command("cmd", "/c", command)
-	err := cmd.Run()
-	if err != nil {
-		log.Logger.Save(err.Error(), log.WARNING, loopback.IP())
-		return nil, errors.New("processo nao encontrado")
+func Cmd(command string, wait bool) *Proc {
+	if wait {
+		return run("cmd", "/c", command)
 	}
 
-	return &Proc{process: cmd.Process, state: cmd.ProcessState}, nil
+	return start("cmd", "/c", command)
 }
 
-// Start executa um comando de sistema
-// Retorna o processo e o error
-func Start(program string) (proc *Proc, err error) {
-	cmd := exec.Command(program)
-	err1 := cmd.Start()
-	if err1 != nil {
-		log.Logger.Save(err1.Error(), log.WARNING, loopback.IP())
-		return nil, errors.New("processo nao encontrado")
+func start(cmd, option, parameters string) *Proc {
+	process := command(cmd, option, parameters, func(process *exec.Cmd) error {
+		return process.Start()
+	})
+
+	return process
+}
+
+func run(cmd, option, parameters string) *Proc {
+	process := command(cmd, option, parameters, func(process *exec.Cmd) error {
+		return process.Run()
+	})
+
+	return process
+}
+
+func command(cmd, option, parameters string, config func(*exec.Cmd) error) *Proc {
+	process := exec.Command(cmd, option, parameters)
+
+	err := config(process)
+	if err != nil {
+		log.Logger.Save(err.Error(), log.WARNING, loopback.IP())
+		return nil
 	}
 
-	return &Proc{process: cmd.Process, state: cmd.ProcessState}, nil
+	return &Proc{process: process.Process, state: process.ProcessState}
 }
 
 // GetID retorna o pid do processo

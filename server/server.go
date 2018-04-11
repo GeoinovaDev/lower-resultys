@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"net/url"
 
-	"git.resultys.com.br/framework/lower/config"
-	"git.resultys.com.br/framework/lower/log"
-	"git.resultys.com.br/framework/lower/net/loopback"
+	"git.resultys.com.br/lib/lower/config"
+	"git.resultys.com.br/lib/lower/log"
+	"git.resultys.com.br/lib/lower/net/loopback"
 )
 
 // Port contém informação sobre a porta utilizada pelo servidor

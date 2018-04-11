@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"git.resultys.com.br/framework/lower/log"
-	"git.resultys.com.br/framework/lower/net/loopback"
+	"git.resultys.com.br/lib/lower/log"
+	"git.resultys.com.br/lib/lower/net/loopback"
 )
 
 // TryExec é a estrutura contendo informações sobre a execução de uma função

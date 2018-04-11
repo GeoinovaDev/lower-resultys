@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"git.resultys.com.br/framework/lower/log"
-	"git.resultys.com.br/framework/lower/net/loopback"
+	"git.resultys.com.br/lib/lower/log"
+	"git.resultys.com.br/lib/lower/net/loopback"
 )
 
 // ProxyURL contem o endereco do proxy no formato: http://dominio

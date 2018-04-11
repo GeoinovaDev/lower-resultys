@@ -1,8 +1,8 @@
 package exec
 
 import (
-	"git.resultys.com.br/framework/lower/log"
-	"git.resultys.com.br/framework/lower/net/loopback"
+	"git.resultys.com.br/lib/lower/log"
+	"git.resultys.com.br/lib/lower/net/loopback"
 )
 
 // Trying tenta executar a função em até 'tentativas' vezes.

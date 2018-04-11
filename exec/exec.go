@@ -3,8 +3,8 @@ package exec
 import (
 	"fmt"
 
-	"git.resultys.com.br/framework/lower/log"
-	"git.resultys.com.br/framework/lower/net/loopback"
+	"git.resultys.com.br/lib/lower/log"
+	"git.resultys.com.br/lib/lower/net/loopback"
 )
 
 // Loop executa infinitamente a função passada por parametro

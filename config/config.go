@@ -3,13 +3,15 @@ package config
 import (
 	"encoding/json"
 	"io/ioutil"
+	"sync"
 
-	"git.resultys.com.br/framework/lower/log"
-	"git.resultys.com.br/framework/lower/net/loopback"
+	"git.resultys.com.br/lib/lower/log"
+	"git.resultys.com.br/lib/lower/net/loopback"
 )
 
 // File variável global contendo o filename default do config.json
 var File = "./config.json"
+var mutex = &sync.Mutex{}
 
 func readFile() []byte {
 	raw, err := ioutil.ReadFile(File)
@@ -33,6 +35,7 @@ func Exist() bool {
 
 // Save salva um objeto de configuração no config.json
 func Save(obj interface{}) error {
+	mutex.Lock()
 	data, err := json.Marshal(obj)
 	if err != nil {
 		log.Logger.Save("não foi possivel salvar no arquivo config.json", log.WARNING, loopback.IP())
@@ -40,7 +43,7 @@ func Save(obj interface{}) error {
 	}
 
 	ioutil.WriteFile(File, data, 755)
-
+	mutex.Unlock()
 	return nil
 }
 
