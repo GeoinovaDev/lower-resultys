@@ -15,7 +15,7 @@ import (
 )
 
 // ProxyURL contem o endereco do proxy no formato: http://dominio
-var ProxyURL = "http://127.0.0.1:8888"
+var ProxyURL = ""
 
 // CURL estrutura da request
 type CURL struct {
