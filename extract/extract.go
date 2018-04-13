@@ -1,6 +1,7 @@
 package extract
 
 import (
+	"html"
 	"regexp"
 	"strings"
 )
@@ -24,6 +25,15 @@ func init() {
 // New cria a estrutura de recorte
 func New(content string) *extract {
 	return &extract{list: []string{content}}
+}
+
+// First retorna o primeiro item recortado
+func (e *extract) First() string {
+	if len(e.list) == 0 {
+		return ""
+	}
+
+	return e.list[0]
 }
 
 // ToArray converte para array
@@ -58,20 +68,19 @@ func (e *extract) Regex(pattern string) *extract {
 	return e
 }
 
-// Clip recorta fragmentos dentro de conteudo
-func (e *extract) Clip(parts ...string) *extract {
+// Clips recorta fragmentos dentro de conteudo
+func (e *extract) Clips(parts ...string) *extract {
 	contents := e.list
 	e.list = []string{}
 	if len(parts) < 2 {
 		panic("str.IndexOf: numero de parametros incorreto")
 	}
 
-	index := 0
 	for j := 0; j < len(contents); j++ {
+		index := 0
 		content := contents[j]
 	loop:
 		for {
-
 			if index >= len(content) {
 				break
 			}
@@ -89,13 +98,17 @@ func (e *extract) Clip(parts ...string) *extract {
 				break
 			}
 
-			f := strings.Index(content[index:], parts[len(parts)-1])
+			f := strings.Index(string(content[index:]), parts[len(parts)-1])
 			if f == -1 {
 				break
 			}
 			f += index
 
-			e.list = append(e.list, string(content[index:f]))
+			str := string(content[index:f])
+			str = html.UnescapeString(str)
+			str = strings.Trim(str, " ")
+
+			e.list = append(e.list, str)
 			index = f
 		}
 	}
