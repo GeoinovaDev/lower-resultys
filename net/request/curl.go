@@ -25,17 +25,6 @@ type CURL struct {
 	headers map[string]string
 }
 
-// URLEncode retorna a string codificada em url
-func URLEncode(str string) string {
-	return url.PathEscape(str)
-}
-
-// URLDecode retorna a string decodifica em url
-func URLDecode(str string) string {
-	s, _ := url.PathUnescape(str)
-	return s
-}
-
 // Create cria uma request
 func Create(url string) *CURL {
 	curl := &CURL{url: url}
@@ -144,6 +133,7 @@ func (curl *CURL) createRequest(method string, data string) error {
 	}
 
 	curl.request = req
+	curl.request.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36")
 	return nil
 }
 
