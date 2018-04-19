@@ -56,7 +56,7 @@ func (q *Queue) RemoveByID(id int) bool {
 // Remove exclui um item da fila
 // Retorna verdadeiro se houve sucesso
 func (q *Queue) Remove(obj Item) bool {
-	return q.RemoveByID(obj.GetId())
+	return q.RemoveByID(obj.GetID())
 }
 
 // IsEmpty retorna se a fila esta vazia
@@ -71,7 +71,7 @@ func (q *Queue) Count() int {
 
 // Exist retorna se um item existe na fila
 func (q *Queue) Exist(obj Item) bool {
-	return q.ExistByID(obj.GetId())
+	return q.ExistByID(obj.GetID())
 }
 
 // ExistByID retorna se um item existe na fila pelo seu id
@@ -81,7 +81,7 @@ func (q *Queue) ExistByID(id int) bool {
 
 func (q *Queue) findIndex(id int) int {
 	for i := 0; i < len(q.items); i++ {
-		if q.items[i].GetId() == id {
+		if q.items[i].GetID() == id {
 			return i
 		}
 	}

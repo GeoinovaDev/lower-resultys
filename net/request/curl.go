@@ -23,12 +23,20 @@ type CURL struct {
 	body    string
 	request *http.Request
 	headers map[string]string
+	timeout time.Duration
 }
 
-// Create cria uma request
-func Create(url string) *CURL {
+// New cria uma request
+func New(url string) *CURL {
 	curl := &CURL{url: url}
+	curl.timeout = 60
 	curl.headers = make(map[string]string)
+	return curl
+}
+
+// SetTimeout define timeout da resposta
+func (curl *CURL) SetTimeout(timeout int) *CURL {
+	curl.timeout = time.Duration(timeout)
 	return curl
 }
 
@@ -138,7 +146,7 @@ func (curl *CURL) createRequest(method string, data string) error {
 }
 
 func (curl *CURL) sendRequest() (string, error) {
-	resp, err := createClient().Do(curl.request)
+	resp, err := curl.createClient().Do(curl.request)
 	if err != nil {
 		log.Logger.Save(err.Error(), log.WARNING, loopback.IP())
 		return "", errors.New("error ao conectar a url")
@@ -162,11 +170,11 @@ func (curl *CURL) injectHeaders() {
 	}
 }
 
-func createClient() *http.Client {
+func (curl *CURL) createClient() *http.Client {
 	var transport = &http.Transport{
-		MaxIdleConns: 100,
+		MaxIdleConns: 1000,
 		Dial: (&net.Dialer{
-			Timeout: 5 * time.Second,
+			Timeout: curl.timeout * time.Second,
 		}).Dial,
 		TLSHandshakeTimeout: 5 * time.Second,
 	}
@@ -181,7 +189,7 @@ func createClient() *http.Client {
 	}
 
 	return &http.Client{
-		Timeout:   10 * time.Second,
+		Timeout:   curl.timeout * time.Second,
 		Transport: transport,
 	}
 }

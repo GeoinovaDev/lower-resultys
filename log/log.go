@@ -3,8 +3,9 @@ package log
 // WARNING : aviso de erro no sistema
 // PANIC   : erro crítico no sistema
 const (
-	WARNING = 1
-	PANIC   = 2
+	WARNING  = 1
+	PANIC    = 2
+	CRITICAL = 3
 )
 
 // ILogger interface para salvar dados de log
