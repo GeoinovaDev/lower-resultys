@@ -17,3 +17,26 @@ type Protocol struct {
 func (p *Protocol) ToJSON() string {
 	return convert.JSONToString(p)
 }
+
+// Success codifica protocolo como sucesso
+func Success(data interface{}) string {
+	protocol := &Protocol{
+		Code:   200,
+		Status: "ok",
+		Data:   data,
+	}
+
+	return protocol.ToJSON()
+}
+
+// Error codifica protocolo como error
+func Error(code int, message string) string {
+	protocol := &Protocol{
+		Code:    code,
+		Status:  "error",
+		Data:    nil,
+		Message: message,
+	}
+
+	return protocol.ToJSON()
+}
