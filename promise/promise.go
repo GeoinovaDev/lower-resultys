@@ -84,3 +84,12 @@ func (p *Promise) Done(cb func()) *Promise {
 
 	return p
 }
+
+// Clear remove todos os callbacks
+func (p *Promise) Clear() *Promise {
+	p.cbOk = []func(interface{}){}
+	p.cbErr = []func(string){}
+	p.cbDone = []func(){}
+
+	return p
+}
