@@ -3,9 +3,21 @@ package convert
 import (
 	"encoding/json"
 
+	"git.resultys.com.br/lib/lower/convert/encode"
 	"git.resultys.com.br/lib/lower/log"
 	"git.resultys.com.br/lib/lower/net/loopback"
 )
+
+// HTTPBuildQuery ...
+func HTTPBuildQuery(arr map[string]string) string {
+	query := ""
+
+	for k, v := range arr {
+		query += k + "=" + v + "&"
+	}
+
+	return encode.URL(string(query[:len(query)-1]))
+}
 
 // JSONToString converte um json em string
 func JSONToString(obj interface{}) string {
