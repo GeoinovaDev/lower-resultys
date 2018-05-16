@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"git.resultys.com.br/lib/lower/exec"
 	"git.resultys.com.br/lib/lower/str"
 )
 
@@ -16,6 +17,16 @@ type Datetime struct {
 // Now ...
 func Now() *Datetime {
 	return &Datetime{time: time.Now()}
+}
+
+// New ...
+func New(date string, format string) (d *Datetime) {
+	exec.Try(func() {
+		d = createDateFromFormat(date, format)
+	}).Catch(func(message string) {
+		d = Parse("0001-01-01 00:00:00")
+	})
+	return
 }
 
 // Parse ...
@@ -50,6 +61,42 @@ func (d *Datetime) TotalDias(n *Datetime) int {
 	}
 
 	return t
+}
+
+func createDateFromFormat(date string, format string) *Datetime {
+	y := extractNumber(date, "y", format)
+	M := extractNumber(date, "M", format)
+	d := extractNumber(date, "d", format)
+	h := extractNumber(date, "h", format)
+	m := extractNumber(date, "m", format)
+	s := extractNumber(date, "s", format)
+
+	if len(h) == 0 {
+		h = "00"
+	}
+
+	if len(m) == 0 {
+		m = "00"
+	}
+
+	if len(s) == 0 {
+		s = "00"
+	}
+
+	return Parse(str.Format("{0}-{1}-{2} {3}:{4}:{5}", y, M, d, h, m, s))
+}
+
+func extractNumber(date string, token string, format string) string {
+	t := len(strings.Split(format, token)) - 1
+	x := -1
+	n := []string{}
+
+	for i := 0; i < t; i++ {
+		y := strings.Index(string(format[x+1:]), token)
+		n = append(n, string(date[y+i]))
+	}
+
+	return strings.Join(n, "")
 }
 
 func formatNumber(n int) string {

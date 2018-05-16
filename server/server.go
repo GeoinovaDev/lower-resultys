@@ -22,7 +22,11 @@ type QueryString struct {
 
 // Get Retorna um valor para chave na query string
 func (qs QueryString) Get(key string) string {
-	return qs.values[key][0]
+	if val, ok := qs.values[key]; ok {
+		return val[0]
+	}
+
+	return ""
 }
 
 func createServer() *http.Server {
