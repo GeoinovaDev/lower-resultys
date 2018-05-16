@@ -36,6 +36,8 @@ func Exist() bool {
 // Save salva um objeto de configuração no config.json
 func Save(obj interface{}) error {
 	mutex.Lock()
+	defer mutex.Unlock()
+
 	data, err := json.Marshal(obj)
 	if err != nil {
 		log.Logger.Save("não foi possivel salvar no arquivo config.json", log.WARNING, loopback.IP())
@@ -43,7 +45,6 @@ func Save(obj interface{}) error {
 	}
 
 	ioutil.WriteFile(File, data, 755)
-	mutex.Unlock()
 	return nil
 }
 
