@@ -41,15 +41,19 @@ func (p *Promise) callDone() {
 }
 
 // Resolve é invokada caso a ação foi executada com sucesso
-func (p *Promise) Resolve(obj interface{}) {
+func (p *Promise) Resolve(obj interface{}) *Promise {
 	p.callOk(obj)
 	p.callDone()
+
+	return p
 }
 
 // Reject é invokada caso a ação foi executada com falha
-func (p *Promise) Reject(message string) {
+func (p *Promise) Reject(message string) *Promise {
 	p.callErr(message)
 	p.callDone()
+
+	return p
 }
 
 // Ok recebe callback de espera que será executado caso houve sucesso na ação
