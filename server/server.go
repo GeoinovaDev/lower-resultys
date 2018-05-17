@@ -57,6 +57,7 @@ func OnGet(route string, handler func(QueryString) string) {
 		}()
 
 		text := handler(QueryString{r.URL.Query()})
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		fmt.Fprint(w, text)
 	})
 }
@@ -76,6 +77,7 @@ func OnPost(route string, handler func(QueryString, string) string) {
 		buf.ReadFrom(r.Body)
 
 		text := handler(QueryString{r.URL.Query()}, buf.String())
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		fmt.Fprint(w, text)
 	})
 }
@@ -92,6 +94,7 @@ func On(route string, handler func() string) {
 		}()
 
 		text := handler()
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		fmt.Fprint(w, text)
 	})
 }
