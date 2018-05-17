@@ -13,10 +13,10 @@ func HTTPBuildQuery(arr map[string]string) string {
 	query := ""
 
 	for k, v := range arr {
-		query += k + "=" + v + "&"
+		query += k + "=" + encode.URL(v) + "&"
 	}
 
-	return encode.URL(string(query[:len(query)-1]))
+	return string(query[:len(query)-1])
 }
 
 // JSONToString converte um json em string
