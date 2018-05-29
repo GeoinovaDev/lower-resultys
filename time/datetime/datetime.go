@@ -54,6 +54,18 @@ func (d *Datetime) String() string {
 	)
 }
 
+// TotalHoras ...
+func (d *Datetime) TotalHoras(dt *Datetime) int {
+	diff := d.time.Sub(dt.time)
+	t := int(diff.Hours())
+
+	if t < 0 {
+		return t * -1
+	}
+
+	return t
+}
+
 // TotalDias ...
 func (d *Datetime) TotalDias(n *Datetime) int {
 	diff := d.time.Sub(n.time)
