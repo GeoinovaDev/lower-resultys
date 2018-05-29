@@ -4,9 +4,8 @@ import (
 	"time"
 
 	"git.resultys.com.br/lib/lower/db/cstring"
+	"git.resultys.com.br/lib/lower/exception"
 	"git.resultys.com.br/lib/lower/exec"
-	"git.resultys.com.br/lib/lower/log"
-	"git.resultys.com.br/lib/lower/net/loopback"
 	mgo "gopkg.in/mgo.v2"
 )
 
@@ -49,8 +48,6 @@ func (mongo *Mongo) Query(query func(*mgo.Collection)) *Mongo {
 
 		c := mongo.session.DB(mongo.db).C(mongo.c)
 		query(c)
-	}).Catch(func(message string) {
-		log.Logger.Save(message, log.WARNING, loopback.IP())
 	})
 
 	return mongo
@@ -69,7 +66,7 @@ func (mongo *Mongo) createConn() *Mongo {
 	session, err := mgo.DialWithInfo(dialInfo)
 	if err != nil {
 		mongo.Error = err
-		log.Logger.Save(err.Error(), log.WARNING, loopback.IP())
+		exception.Raise(err.Error(), exception.WARNING)
 		mongo.session = nil
 		return mongo
 	}

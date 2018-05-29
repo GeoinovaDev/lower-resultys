@@ -4,8 +4,7 @@ import (
 	"encoding/json"
 
 	"git.resultys.com.br/lib/lower/convert/encode"
-	"git.resultys.com.br/lib/lower/log"
-	"git.resultys.com.br/lib/lower/net/loopback"
+	"git.resultys.com.br/lib/lower/exception"
 )
 
 // HTTPBuildQuery ...
@@ -23,7 +22,7 @@ func HTTPBuildQuery(arr map[string]string) string {
 func JSONToString(obj interface{}) string {
 	_json, err := json.Marshal(obj)
 	if err != nil {
-		log.Logger.Save(err.Error(), log.WARNING, loopback.IP())
+		exception.Raise(err.Error(), exception.WARNING)
 		return ""
 	}
 

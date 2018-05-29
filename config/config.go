@@ -5,8 +5,7 @@ import (
 	"io/ioutil"
 	"sync"
 
-	"git.resultys.com.br/lib/lower/log"
-	"git.resultys.com.br/lib/lower/net/loopback"
+	"git.resultys.com.br/lib/lower/exception"
 )
 
 // File variável global contendo o filename default do config.json
@@ -16,7 +15,7 @@ var mutex = &sync.Mutex{}
 func readFile() []byte {
 	raw, err := ioutil.ReadFile(File)
 	if err != nil {
-		log.Logger.Save("não foi possivel ler o arquivo config.json", log.PANIC, loopback.IP())
+		exception.Raise("não foi possivel ler o arquivo config.json", exception.WARNING)
 		raw = make([]byte, 0)
 	}
 
@@ -40,7 +39,7 @@ func Save(obj interface{}) error {
 
 	data, err := json.Marshal(obj)
 	if err != nil {
-		log.Logger.Save("não foi possivel salvar no arquivo config.json", log.WARNING, loopback.IP())
+		exception.Raise("não foi possivel salvar no arquivo config.json", exception.WARNING)
 		return err
 	}
 

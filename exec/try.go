@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"git.resultys.com.br/lib/lower/log"
-	"git.resultys.com.br/lib/lower/net/loopback"
+	"git.resultys.com.br/lib/lower/exception"
 )
 
 // TryExec é a estrutura contendo informações sobre a execução de uma função
@@ -44,7 +43,7 @@ func Try(code func()) (t *TryExec) {
 				trying.cbCatch(trying.err)
 			}
 
-			log.Logger.Save(trying.err, log.WARNING, loopback.IP())
+			exception.Raise(msg, exception.WARNING)
 
 			return
 		}

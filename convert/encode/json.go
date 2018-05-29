@@ -3,15 +3,14 @@ package encode
 import (
 	"encoding/json"
 
-	"git.resultys.com.br/lib/lower/log"
-	"git.resultys.com.br/lib/lower/net/loopback"
+	"git.resultys.com.br/lib/lower/exception"
 )
 
 // JSON encode
 func JSON(obj interface{}) string {
 	_json, err := json.Marshal(obj)
 	if err != nil {
-		log.Logger.Save(err.Error(), log.WARNING, loopback.IP())
+		exception.Raise(err.Error(), exception.WARNING)
 		return ""
 	}
 

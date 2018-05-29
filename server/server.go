@@ -7,8 +7,8 @@ import (
 	"net/url"
 
 	"git.resultys.com.br/lib/lower/config"
-	"git.resultys.com.br/lib/lower/log"
-	"git.resultys.com.br/lib/lower/net/loopback"
+	"git.resultys.com.br/lib/lower/exception"
+	"git.resultys.com.br/lib/lower/exec"
 )
 
 // Port contém informação sobre a porta utilizada pelo servidor
@@ -49,15 +49,11 @@ func createServer() *http.Server {
 func OnGet(route string, handler func(QueryString) string) {
 	http.HandleFunc(route, func(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
-		defer func() {
-			err := recover()
-			if err != nil {
-				log.Logger.Save(fmt.Sprint(err), log.WARNING, loopback.IP())
-			}
-		}()
 
-		text := handler(QueryString{r.URL.Query()})
-		fmt.Fprint(w, text)
+		exec.Try(func() {
+			text := handler(QueryString{r.URL.Query()})
+			fmt.Fprint(w, text)
+		})
 	})
 }
 
@@ -65,18 +61,13 @@ func OnGet(route string, handler func(QueryString) string) {
 func OnPost(route string, handler func(QueryString, string) string) {
 	http.HandleFunc(route, func(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
-		defer func() {
-			err := recover()
-			if err != nil {
-				log.Logger.Save(fmt.Sprint(err), log.WARNING, loopback.IP())
-			}
-		}()
+		exec.Try(func() {
+			buf := new(bytes.Buffer)
+			buf.ReadFrom(r.Body)
 
-		buf := new(bytes.Buffer)
-		buf.ReadFrom(r.Body)
-
-		text := handler(QueryString{r.URL.Query()}, buf.String())
-		fmt.Fprint(w, text)
+			text := handler(QueryString{r.URL.Query()}, buf.String())
+			fmt.Fprint(w, text)
+		})
 	})
 }
 
@@ -84,22 +75,17 @@ func OnPost(route string, handler func(QueryString, string) string) {
 func On(route string, handler func() string) {
 	http.HandleFunc(route, func(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
-		defer func() {
-			err := recover()
-			if err != nil {
-				log.Logger.Save(fmt.Sprint(err), log.WARNING, loopback.IP())
-			}
-		}()
-
-		text := handler()
-		fmt.Fprint(w, text)
+		exec.Try(func() {
+			text := handler()
+			fmt.Fprint(w, text)
+		})
 	})
 }
 
 // Start inicia o serviço
 func Start() {
 	if listing {
-		log.Logger.Save("servidor ja esta em execucao", log.WARNING, loopback.IP())
+		exception.Raise("serviço já foi iniciado", exception.WARNING)
 		return
 	}
 

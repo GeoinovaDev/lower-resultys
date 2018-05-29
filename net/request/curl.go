@@ -10,8 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"git.resultys.com.br/lib/lower/log"
-	"git.resultys.com.br/lib/lower/net/loopback"
+	"git.resultys.com.br/lib/lower/exception"
 )
 
 // ProxyURL contem o endereco do proxy no formato: http://dominio
@@ -106,7 +105,7 @@ func (curl *CURL) Post(formData map[string]string) (string, error) {
 func (curl *CURL) PostJSON(obj interface{}) (string, error) {
 	_json, err := json.Marshal(obj)
 	if err != nil {
-		log.Logger.Save(err.Error(), log.WARNING, loopback.IP())
+		exception.Raise(err.Error(), exception.WARNING)
 		return "", errors.New("erro ao codificar o json")
 	}
 
@@ -136,7 +135,7 @@ func (curl *CURL) createRequest(method string, data string) error {
 	}
 
 	if err != nil {
-		log.Logger.Save(err.Error(), log.WARNING, loopback.IP())
+		exception.Raise(err.Error(), exception.WARNING)
 		return errors.New("erro ao criar a request")
 	}
 
@@ -148,14 +147,14 @@ func (curl *CURL) createRequest(method string, data string) error {
 func (curl *CURL) sendRequest() (string, error) {
 	resp, err := curl.createClient().Do(curl.request)
 	if err != nil {
-		log.Logger.Save(err.Error(), log.WARNING, loopback.IP())
+		exception.Raise(err.Error(), exception.WARNING)
 		return "", errors.New("error ao conectar a url")
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Logger.Save(err.Error(), log.WARNING, loopback.IP())
+		exception.Raise(err.Error(), exception.WARNING)
 		return "", errors.New("erro ao ler o conteudo do body")
 	}
 
@@ -182,7 +181,7 @@ func (curl *CURL) createClient() *http.Client {
 	if len(ProxyURL) > 5 {
 		urlProxy, err := url.Parse(ProxyURL)
 		if err != nil {
-			log.Logger.Save(err.Error(), log.PANIC, loopback.IP())
+			exception.Raise(err.Error(), exception.WARNING)
 		} else {
 			transport.Proxy = http.ProxyURL(urlProxy)
 		}

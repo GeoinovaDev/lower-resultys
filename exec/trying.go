@@ -2,9 +2,6 @@ package exec
 
 import (
 	"time"
-
-	"git.resultys.com.br/lib/lower/log"
-	"git.resultys.com.br/lib/lower/net/loopback"
 )
 
 // Trying tenta executar a função em até 'tentativas' vezes.
@@ -19,7 +16,6 @@ func Trying(tentativas int, code func(), success func(), err func(), finish func
 			i = 10000
 			b = true
 		}).Catch(func(message string) {
-			log.Logger.Save(message, log.WARNING, loopback.IP())
 			time.Sleep(5 * time.Second)
 		})
 	}

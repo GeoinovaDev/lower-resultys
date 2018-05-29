@@ -6,8 +6,7 @@ import (
 	"runtime"
 	"time"
 
-	"git.resultys.com.br/lib/lower/log"
-	"git.resultys.com.br/lib/lower/net/loopback"
+	"git.resultys.com.br/lib/lower/exception"
 )
 
 // Proc estrutura do processo seu estado
@@ -87,7 +86,7 @@ func command(cmd, option, parameters string, config func(*exec.Cmd) error) *Proc
 
 	err := config(process)
 	if err != nil {
-		log.Logger.Save(err.Error(), log.WARNING, loopback.IP())
+		exception.Raise(err.Error(), exception.WARNING)
 		return nil
 	}
 
@@ -104,7 +103,7 @@ func (p *Proc) Close() {
 	for {
 		err := p.process.Kill()
 		if err != nil {
-			log.Logger.Save(err.Error(), log.WARNING, loopback.IP())
+			exception.Raise(err.Error(), exception.WARNING)
 			time.Sleep(1 * time.Second)
 			continue
 		}

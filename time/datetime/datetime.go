@@ -5,7 +5,6 @@ import (
 	"strings"
 	"time"
 
-	"git.resultys.com.br/lib/lower/exec"
 	"git.resultys.com.br/lib/lower/str"
 )
 
@@ -21,11 +20,15 @@ func Now() *Datetime {
 
 // New ...
 func New(date string, format string) (d *Datetime) {
-	exec.Try(func() {
-		d = createDateFromFormat(date, format)
-	}).Catch(func(message string) {
-		d = Parse("0001-01-01 00:00:00")
-	})
+	defer func() {
+		err := recover()
+		if err != nil {
+			d = Parse("0001-01-01 00:00:00")
+		}
+	}()
+
+	d = createDateFromFormat(date, format)
+
 	return
 }
 
