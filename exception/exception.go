@@ -3,6 +3,7 @@ package exception
 import (
 	"runtime"
 
+	"git.resultys.com.br/lib/lower/net/loopback"
 	"git.resultys.com.br/lib/lower/syslog"
 	"git.resultys.com.br/lib/lower/time/datetime"
 )
@@ -25,6 +26,7 @@ type Exception struct {
 	Message  string  `json:"message" bson:"message"`
 	CreateAt string  `json:"create_at" bson:"create_at"`
 	Tipo     string  `json:"tipo" bson:"tipo"`
+	IP       string  `json:"ip" bson:"ip"`
 	Stack    []Stack `json:"stack" bson:"stack"`
 }
 
@@ -35,6 +37,7 @@ func New(message string, tipo string) *Exception {
 		CreateAt: datetime.Now().String(),
 		Stack:    []Stack{},
 		Tipo:     tipo,
+		IP:       loopback.IP(),
 	}
 }
 
