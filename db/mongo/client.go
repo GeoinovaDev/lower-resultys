@@ -46,6 +46,8 @@ func (mongo *Mongo) Query(query func(*mgo.Collection)) *Mongo {
 		}
 		defer mongo.session.Close()
 
+		mongo.session.SetSocketTimeout(60 * time.Second)
+
 		c := mongo.session.DB(mongo.db).C(mongo.c)
 		query(c)
 	})
