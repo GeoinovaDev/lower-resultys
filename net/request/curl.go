@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
@@ -151,14 +152,19 @@ func (curl *CURL) sendRequest() (string, error) {
 	resp, err := curl.createClient().Do(curl.request)
 	if err != nil {
 		exception.Raise(err.Error(), exception.WARNING)
-		return "", errors.New("error ao conectar a url")
+		return "", errors.New("error ao conectar a url" + curl.url)
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		exception.Raise(err.Error(), exception.WARNING)
-		return "", errors.New("erro ao ler o conteudo do body")
+		return "", errors.New("erro ao ler o conteudo do body " + curl.url)
+	}
+
+	if resp.StatusCode != 200 {
+		exception.Raise(err.Error(), exception.WARNING)
+		return "", errors.New("error codigo " + strconv.Itoa(resp.StatusCode) + " ao conectar a url " + curl.url)
 	}
 
 	curl.body = string(body)

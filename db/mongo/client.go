@@ -39,14 +39,14 @@ func (mongo *Mongo) C(c string) *Mongo {
 
 // Query executa uma consulta
 func (mongo *Mongo) Query(query func(*mgo.Collection)) *Mongo {
-	exec.Try(func() {
+	exec.Tryx(5, func() {
 		mongo.createConn()
 		if mongo.session == nil {
 			return
 		}
 		defer mongo.session.Close()
 
-		mongo.session.SetSocketTimeout(60 * time.Second)
+		mongo.session.SetSocketTimeout(12 * time.Second)
 
 		c := mongo.session.DB(mongo.db).C(mongo.c)
 		query(c)
@@ -59,7 +59,7 @@ func (mongo *Mongo) createConn() *Mongo {
 	conn := cstring.Get("mongo")
 	dialInfo := &mgo.DialInfo{
 		Addrs:    []string{conn.Host},
-		Timeout:  60 * time.Second,
+		Timeout:  10 * time.Second,
 		Database: conn.Db,
 		Username: conn.User,
 		Password: conn.Pass,
