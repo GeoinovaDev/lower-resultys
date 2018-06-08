@@ -24,6 +24,7 @@ type CURL struct {
 	request *http.Request
 	headers map[string]string
 	timeout time.Duration
+	Status  int
 }
 
 // New cria uma request
@@ -162,8 +163,10 @@ func (curl *CURL) sendRequest() (string, error) {
 		return "", errors.New("erro ao ler o conteudo do body " + curl.url)
 	}
 
+	curl.Status = resp.StatusCode
+
 	if resp.StatusCode != 200 {
-		exception.Raise(err.Error(), exception.WARNING)
+		// exception.Raise(err.Error(), exception.WARNING)
 		return "", errors.New("error codigo " + strconv.Itoa(resp.StatusCode) + " ao conectar a url " + curl.url)
 	}
 
