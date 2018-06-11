@@ -32,6 +32,15 @@ func New(date string, format string) (d *Datetime) {
 	return
 }
 
+// IsEqualDate ...
+func (d *Datetime) IsEqualDate(date *Datetime) bool {
+	if date.time.Day() == d.time.Day() && date.time.Month() == d.time.Month() && date.time.Year() == d.time.Year() {
+		return true
+	}
+
+	return false
+}
+
 // Parse ...
 func Parse(datetime string) *Datetime {
 	loc, _ := time.LoadLocation("America/Sao_Paulo")
