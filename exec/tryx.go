@@ -29,6 +29,7 @@ func Tryx(tentativas int, code func()) (t *TryxExec) {
 	for i := 0; i < tentativas; i++ {
 		tryx.run(code, func() {
 			i = tentativas + 1
+			err = ""
 		}, func(message string) {
 			err = message
 			time.Sleep(b.Duration())
