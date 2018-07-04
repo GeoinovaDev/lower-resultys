@@ -50,6 +50,9 @@ func OnGet(route string, handler func(QueryString) string) {
 	http.HandleFunc(route, func(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
 
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
 		exec.Try(func() {
 			text := handler(QueryString{r.URL.Query()})
 			fmt.Fprint(w, text)
@@ -64,6 +67,9 @@ func OnPost(route string, handler func(QueryString, string) string) {
 		exec.Try(func() {
 			buf := new(bytes.Buffer)
 			buf.ReadFrom(r.Body)
+
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
 			text := handler(QueryString{r.URL.Query()}, buf.String())
 			fmt.Fprint(w, text)

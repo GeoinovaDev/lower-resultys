@@ -24,5 +24,8 @@ func (s *Shm) Wait() {
 
 // Done ...
 func (s *Shm) Done() {
+	defer func() {
+		recover()
+	}()
 	s.wg.Done()
 }
