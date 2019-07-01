@@ -96,5 +96,10 @@ func Start() {
 	}
 
 	server := createServer()
-	server.ListenAndServe()
+	err := server.ListenAndServe()
+	if err != nil {
+		println(err.Error())
+		fmt.Scanln()
+		panic(err)
+	}
 }
