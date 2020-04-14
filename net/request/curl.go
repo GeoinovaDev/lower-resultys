@@ -24,6 +24,7 @@ type CURL struct {
 	request *http.Request
 	headers map[string]string
 	timeout time.Duration
+	proxy   string
 	Status  int
 }
 
@@ -32,6 +33,13 @@ func New(url string) *CURL {
 	curl := &CURL{url: url}
 	curl.timeout = 60
 	curl.headers = make(map[string]string)
+	return curl
+}
+
+// SetProxy ...
+func (curl *CURL) SetProxy(proxy string) *CURL {
+	curl.proxy = proxy
+
 	return curl
 }
 
@@ -190,8 +198,18 @@ func (curl *CURL) createClient() *http.Client {
 		TLSHandshakeTimeout: 5 * time.Second,
 	}
 
+	_proxyURL := ""
+
 	if len(ProxyURL) > 5 {
-		urlProxy, err := url.Parse(ProxyURL)
+		_proxyURL = ProxyURL
+	}
+
+	if len(curl.proxy) > 5 {
+		_proxyURL = curl.proxy
+	}
+
+	if len(_proxyURL) > 5 {
+		urlProxy, err := url.Parse(_proxyURL)
 		if err != nil {
 			exception.Raise(err.Error(), exception.WARNING)
 		} else {
