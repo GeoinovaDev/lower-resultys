@@ -43,7 +43,7 @@ func (curl *CURL) SetProxy(proxy string) *CURL {
 	return curl
 }
 
-// SetTimeout define timeout da resposta
+// SetTimeout define timeout da resposta em segundos
 func (curl *CURL) SetTimeout(timeout int) *CURL {
 	curl.timeout = time.Duration(timeout)
 	return curl
