@@ -31,3 +31,12 @@ func (s *ServiceLocator) Add(name string, service interface{}) *ServiceLocator {
 func (s *ServiceLocator) Get(name string) interface{} {
 	return s.services[name]
 }
+
+// Clear ...
+func (s *ServiceLocator) Clear() {
+	for service := range s.services {
+		delete(s.services, service)
+	}
+
+	s.services = make(map[string]interface{})
+}
