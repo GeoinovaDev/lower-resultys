@@ -7,12 +7,14 @@ import (
 // Promise é a estrutura contendo informações execução futura
 type Promise struct {
 	cbOk   []func(interface{})
+	cbOnce []func(interface{})
 	cbErr  []func(string)
 	cbDone []func()
 
 	isOk   bool
 	isErr  bool
 	isDone bool
+	isOnce bool
 
 	obj     interface{}
 	message string
@@ -24,6 +26,21 @@ type Promise struct {
 func New() *Promise {
 	return &Promise{
 		mutex: &sync.Mutex{},
+	}
+}
+
+func (p *Promise) callOnce(obj interface{}) {
+	p.mutex.Lock()
+	if p.isOnce {
+		p.mutex.Unlock()
+		return
+	}
+	p.isOnce = true
+	p.obj = obj
+	p.mutex.Unlock()
+
+	for i := 0; i < len(p.cbOnce); i++ {
+		p.cbOnce[i](obj)
 	}
 }
 
@@ -53,8 +70,18 @@ func (p *Promise) callDone() {
 	}
 }
 
+// Once ...
+func (p *Promise) Once(cb func(interface{})) *Promise {
+	p.mutex.Lock()
+	p.cbOnce = append(p.cbOnce, cb)
+	p.mutex.Unlock()
+
+	return p
+}
+
 // Resolve é invokada caso a ação foi executada com sucesso
 func (p *Promise) Resolve(obj interface{}) *Promise {
+	p.callOnce(obj)
 	p.callOk(obj)
 	p.callDone()
 
