@@ -146,38 +146,48 @@ func (p *Promise) Done(cb func()) *Promise {
 
 // Clear remove todos os callbacks
 func (p *Promise) Clear() *Promise {
-	p.ClearOk()
-	p.ClearErr()
-	p.ClearDone()
-	p.ClearOnce()
+	p.mutex.Lock()
+	p.cbOk = []func(interface{}){}
+	p.cbErr = []func(string){}
+	p.cbDone = []func(){}
+	p.cbOnce = []func(interface{}){}
+	p.mutex.Unlock()
 
 	return p
 }
 
 // ClearOk ...
 func (p *Promise) ClearOk() *Promise {
+	p.mutex.Lock()
 	p.cbOk = []func(interface{}){}
+	p.mutex.Unlock()
 
 	return p
 }
 
 // ClearErr ...
 func (p *Promise) ClearErr() *Promise {
+	p.mutex.Lock()
 	p.cbErr = []func(string){}
+	p.mutex.Unlock()
 
 	return p
 }
 
 // ClearDone ...
 func (p *Promise) ClearDone() *Promise {
+	p.mutex.Lock()
 	p.cbDone = []func(){}
+	p.mutex.Unlock()
 
 	return p
 }
 
 // ClearOnce ...
 func (p *Promise) ClearOnce() *Promise {
+	p.mutex.Lock()
 	p.cbOnce = []func(interface{}){}
+	p.mutex.Unlock()
 
 	return p
 }
