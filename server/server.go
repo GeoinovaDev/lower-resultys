@@ -48,43 +48,51 @@ func createServer() *http.Server {
 // OnGet possui callback de rota para requisições do tipo GET
 func OnGet(route string, handler func(QueryString) string) {
 	http.HandleFunc(route, func(w http.ResponseWriter, r *http.Request) {
-		defer r.Body.Close()
+		go func() {
+			defer r.Body.Close()
+			exec.Try(func() {
 
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+				w.Header().Set("Access-Control-Allow-Origin", "*")
+				w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
-		exec.Try(func() {
-			text := handler(QueryString{r.URL.Query()})
-			fmt.Fprint(w, text)
-		})
+				text := handler(QueryString{r.URL.Query()})
+				fmt.Fprint(w, text)
+			})
+		}()
 	})
 }
 
 // OnPost possui callback de rota para requisições do tipo POST
 func OnPost(route string, handler func(QueryString, string) string) {
 	http.HandleFunc(route, func(w http.ResponseWriter, r *http.Request) {
-		defer r.Body.Close()
-		exec.Try(func() {
-			buf := new(bytes.Buffer)
-			buf.ReadFrom(r.Body)
+		go func() {
+			defer r.Body.Close()
 
-			w.Header().Set("Access-Control-Allow-Origin", "*")
-			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+			exec.Try(func() {
+				buf := new(bytes.Buffer)
+				buf.ReadFrom(r.Body)
 
-			text := handler(QueryString{r.URL.Query()}, buf.String())
-			fmt.Fprint(w, text)
-		})
+				w.Header().Set("Access-Control-Allow-Origin", "*")
+				w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+				text := handler(QueryString{r.URL.Query()}, buf.String())
+				fmt.Fprint(w, text)
+			})
+		}()
 	})
 }
 
 // On possui callback de rota para requisições de qualquer metodo
 func On(route string, handler func() string) {
 	http.HandleFunc(route, func(w http.ResponseWriter, r *http.Request) {
-		defer r.Body.Close()
-		exec.Try(func() {
-			text := handler()
-			fmt.Fprint(w, text)
-		})
+		go func() {
+			defer r.Body.Close()
+
+			exec.Try(func() {
+				text := handler()
+				fmt.Fprint(w, text)
+			})
+		}()
 	})
 }
 
