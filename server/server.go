@@ -48,14 +48,17 @@ func createServer() *http.Server {
 // OnGet possui callback de rota para requisições do tipo GET
 func OnGet(route string, handler func(QueryString) string) {
 	http.HandleFunc(route, func(w http.ResponseWriter, r *http.Request) {
+		qs := QueryString{r.URL.Query()}
+
 		go func() {
 			defer r.Body.Close()
+
 			exec.Try(func() {
 
 				w.Header().Set("Access-Control-Allow-Origin", "*")
 				w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
-				text := handler(QueryString{r.URL.Query()})
+				text := handler(qs)
 				fmt.Fprint(w, text)
 			})
 		}()
@@ -65,17 +68,20 @@ func OnGet(route string, handler func(QueryString) string) {
 // OnPost possui callback de rota para requisições do tipo POST
 func OnPost(route string, handler func(QueryString, string) string) {
 	http.HandleFunc(route, func(w http.ResponseWriter, r *http.Request) {
+		buf := new(bytes.Buffer)
+		buf.ReadFrom(r.Body)
+		data := buf.String()
+		qs := QueryString{r.URL.Query()}
+
 		go func() {
 			defer r.Body.Close()
 
 			exec.Try(func() {
-				buf := new(bytes.Buffer)
-				buf.ReadFrom(r.Body)
 
 				w.Header().Set("Access-Control-Allow-Origin", "*")
 				w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
-				text := handler(QueryString{r.URL.Query()}, buf.String())
+				text := handler(qs, data)
 				fmt.Fprint(w, text)
 			})
 		}()
