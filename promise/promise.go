@@ -11,10 +11,11 @@ type Promise struct {
 	cbErr  []func(string)
 	cbDone []func()
 
-	isOk   bool
-	isErr  bool
-	isDone bool
-	isOnce bool
+	isOk        bool
+	isErr       bool
+	isDone      bool
+	isOnce      bool
+	isFlashback bool
 
 	obj     interface{}
 	message string
@@ -25,8 +26,16 @@ type Promise struct {
 // New ...
 func New() *Promise {
 	return &Promise{
-		mutex: &sync.Mutex{},
+		mutex:       &sync.Mutex{},
+		isFlashback: true,
 	}
+}
+
+// FlashBack ...
+func (p *Promise) FlashBack(b bool) *Promise {
+	p.isFlashback = b
+
+	return p
 }
 
 func (p *Promise) callOnce(obj interface{}) {
@@ -102,7 +111,7 @@ func (p *Promise) Ok(cb func(interface{})) *Promise {
 	p.cbOk = append(p.cbOk, cb)
 	p.mutex.Unlock()
 
-	if p.isOk {
+	if p.isOk && p.isFlashback {
 		p.callOk(p.obj)
 	}
 
@@ -115,7 +124,7 @@ func (p *Promise) Err(cb func(string)) *Promise {
 	p.cbErr = append(p.cbErr, cb)
 	p.mutex.Unlock()
 
-	if p.isErr {
+	if p.isErr && p.isFlashback {
 		p.callErr(p.message)
 	}
 
@@ -128,7 +137,7 @@ func (p *Promise) Done(cb func()) *Promise {
 	p.cbDone = append(p.cbDone, cb)
 	p.mutex.Unlock()
 
-	if p.isDone {
+	if p.isDone && p.isFlashback {
 		p.callDone()
 	}
 
@@ -137,9 +146,38 @@ func (p *Promise) Done(cb func()) *Promise {
 
 // Clear remove todos os callbacks
 func (p *Promise) Clear() *Promise {
+	p.ClearOk()
+	p.ClearErr()
+	p.ClearDone()
+	p.ClearOnce()
+
+	return p
+}
+
+// ClearOk ...
+func (p *Promise) ClearOk() *Promise {
 	p.cbOk = []func(interface{}){}
+
+	return p
+}
+
+// ClearErr ...
+func (p *Promise) ClearErr() *Promise {
 	p.cbErr = []func(string){}
+
+	return p
+}
+
+// ClearDone ...
+func (p *Promise) ClearDone() *Promise {
 	p.cbDone = []func(){}
+
+	return p
+}
+
+// ClearOnce ...
+func (p *Promise) ClearOnce() *Promise {
+	p.cbOnce = []func(interface{}){}
 
 	return p
 }
