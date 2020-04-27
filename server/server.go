@@ -50,55 +50,49 @@ func OnGet(route string, handler func(QueryString) string) {
 	http.HandleFunc(route, func(w http.ResponseWriter, r *http.Request) {
 		qs := QueryString{r.URL.Query()}
 
-		go func() {
-			defer r.Body.Close()
+		defer r.Body.Close()
 
-			exec.Try(func() {
+		exec.Try(func() {
 
-				w.Header().Set("Access-Control-Allow-Origin", "*")
-				w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
-				text := handler(qs)
-				fmt.Fprint(w, text)
-			})
-		}()
+			text := handler(qs)
+			fmt.Fprint(w, text)
+		})
 	})
 }
 
 // OnPost possui callback de rota para requisições do tipo POST
 func OnPost(route string, handler func(QueryString, string) string) {
 	http.HandleFunc(route, func(w http.ResponseWriter, r *http.Request) {
+		defer r.Body.Close()
+
 		buf := new(bytes.Buffer)
 		buf.ReadFrom(r.Body)
 		data := buf.String()
 		qs := QueryString{r.URL.Query()}
 
-		go func() {
-			defer r.Body.Close()
+		exec.Try(func() {
 
-			exec.Try(func() {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
-				w.Header().Set("Access-Control-Allow-Origin", "*")
-				w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
-				text := handler(qs, data)
-				fmt.Fprint(w, text)
-			})
-		}()
+			text := handler(qs, data)
+			fmt.Fprint(w, text)
+		})
 	})
 }
 
 // On possui callback de rota para requisições de qualquer metodo
 func On(route string, handler func() string) {
 	http.HandleFunc(route, func(w http.ResponseWriter, r *http.Request) {
-		go func() {
-			defer r.Body.Close()
+		defer r.Body.Close()
 
-			exec.Try(func() {
-				text := handler()
-				fmt.Fprint(w, text)
-			})
-		}()
+		exec.Try(func() {
+			text := handler()
+			fmt.Fprint(w, text)
+		})
 	})
 }
 
