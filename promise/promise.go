@@ -7,12 +7,15 @@ import (
 // Promise é a estrutura contendo informações execução futura
 type Promise struct {
 	cbOk   []func(interface{})
+	cbOnce []func(interface{})
 	cbErr  []func(string)
 	cbDone []func()
 
-	isOk   bool
-	isErr  bool
-	isDone bool
+	isOk        bool
+	isErr       bool
+	isDone      bool
+	isOnce      bool
+	isFlashback bool
 
 	obj     interface{}
 	message string
@@ -23,7 +26,30 @@ type Promise struct {
 // New ...
 func New() *Promise {
 	return &Promise{
-		mutex: &sync.Mutex{},
+		mutex:       &sync.Mutex{},
+		isFlashback: true,
+	}
+}
+
+// FlashBack ...
+func (p *Promise) FlashBack(b bool) *Promise {
+	p.isFlashback = b
+
+	return p
+}
+
+func (p *Promise) callOnce(obj interface{}) {
+	p.mutex.Lock()
+	if p.isOnce {
+		p.mutex.Unlock()
+		return
+	}
+	p.isOnce = true
+	p.obj = obj
+	p.mutex.Unlock()
+
+	for i := 0; i < len(p.cbOnce); i++ {
+		p.cbOnce[i](obj)
 	}
 }
 
@@ -53,8 +79,18 @@ func (p *Promise) callDone() {
 	}
 }
 
+// Once ...
+func (p *Promise) Once(cb func(interface{})) *Promise {
+	p.mutex.Lock()
+	p.cbOnce = append(p.cbOnce, cb)
+	p.mutex.Unlock()
+
+	return p
+}
+
 // Resolve é invokada caso a ação foi executada com sucesso
 func (p *Promise) Resolve(obj interface{}) *Promise {
+	p.callOnce(obj)
 	p.callOk(obj)
 	p.callDone()
 
@@ -75,7 +111,7 @@ func (p *Promise) Ok(cb func(interface{})) *Promise {
 	p.cbOk = append(p.cbOk, cb)
 	p.mutex.Unlock()
 
-	if p.isOk {
+	if p.isOk && p.isFlashback {
 		p.callOk(p.obj)
 	}
 
@@ -88,7 +124,7 @@ func (p *Promise) Err(cb func(string)) *Promise {
 	p.cbErr = append(p.cbErr, cb)
 	p.mutex.Unlock()
 
-	if p.isErr {
+	if p.isErr && p.isFlashback {
 		p.callErr(p.message)
 	}
 
@@ -101,7 +137,7 @@ func (p *Promise) Done(cb func()) *Promise {
 	p.cbDone = append(p.cbDone, cb)
 	p.mutex.Unlock()
 
-	if p.isDone {
+	if p.isDone && p.isFlashback {
 		p.callDone()
 	}
 
@@ -110,9 +146,48 @@ func (p *Promise) Done(cb func()) *Promise {
 
 // Clear remove todos os callbacks
 func (p *Promise) Clear() *Promise {
+	p.mutex.Lock()
 	p.cbOk = []func(interface{}){}
 	p.cbErr = []func(string){}
 	p.cbDone = []func(){}
+	p.cbOnce = []func(interface{}){}
+	p.mutex.Unlock()
+
+	return p
+}
+
+// ClearOk ...
+func (p *Promise) ClearOk() *Promise {
+	p.mutex.Lock()
+	p.cbOk = []func(interface{}){}
+	p.mutex.Unlock()
+
+	return p
+}
+
+// ClearErr ...
+func (p *Promise) ClearErr() *Promise {
+	p.mutex.Lock()
+	p.cbErr = []func(string){}
+	p.mutex.Unlock()
+
+	return p
+}
+
+// ClearDone ...
+func (p *Promise) ClearDone() *Promise {
+	p.mutex.Lock()
+	p.cbDone = []func(){}
+	p.mutex.Unlock()
+
+	return p
+}
+
+// ClearOnce ...
+func (p *Promise) ClearOnce() *Promise {
+	p.mutex.Lock()
+	p.cbOnce = []func(interface{}){}
+	p.mutex.Unlock()
 
 	return p
 }

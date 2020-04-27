@@ -145,6 +145,22 @@ func (curl *CURL) PostJSON(obj interface{}) (string, error) {
 	return body, nil
 }
 
+// PostRaw ...
+func (curl *CURL) PostRaw(data string) (string, error) {
+	err := curl.createRequest("POST", data)
+	if err != nil {
+		return "", err
+	}
+
+	curl.injectHeaders()
+	body, err := curl.sendRequest()
+	if err != nil {
+		return "", err
+	}
+
+	return body, nil
+}
+
 func (curl *CURL) createRequest(method string, data string) error {
 	var req *http.Request
 	var err error
