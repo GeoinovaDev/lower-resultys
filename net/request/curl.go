@@ -19,20 +19,28 @@ var ProxyURL = ""
 
 // CURL estrutura da request
 type CURL struct {
-	url     string
-	body    string
-	request *http.Request
-	headers map[string]string
-	timeout time.Duration
-	proxy   string
-	Status  int
+	url            string
+	body           string
+	request        *http.Request
+	headers        map[string]string
+	timeout        time.Duration
+	proxy          string
+	Status         int
+	raiseException bool
 }
 
 // New cria uma request
 func New(url string) *CURL {
 	curl := &CURL{url: url}
 	curl.timeout = 60
+	curl.raiseException = false
 	curl.headers = make(map[string]string)
+	return curl
+}
+
+// EnableRaiseException ...
+func (curl *CURL) EnableRaiseException(enable bool) *CURL {
+	curl.raiseException = enable
 	return curl
 }
 
@@ -115,7 +123,10 @@ func (curl *CURL) Post(formData map[string]string) (string, error) {
 func (curl *CURL) PostJSON(obj interface{}) (string, error) {
 	_json, err := json.Marshal(obj)
 	if err != nil {
-		exception.Raise(err.Error(), exception.WARNING)
+		if curl.raiseException {
+			exception.Raise(err.Error(), exception.WARNING)
+		}
+
 		return "", errors.New("erro ao codificar o json")
 	}
 
@@ -145,7 +156,10 @@ func (curl *CURL) createRequest(method string, data string) error {
 	}
 
 	if err != nil {
-		exception.Raise(err.Error(), exception.WARNING)
+		if curl.raiseException {
+			exception.Raise(err.Error(), exception.WARNING)
+		}
+
 		return errors.New("erro ao criar a request")
 	}
 
@@ -160,14 +174,20 @@ func (curl *CURL) createRequest(method string, data string) error {
 func (curl *CURL) sendRequest() (string, error) {
 	resp, err := curl.createClient().Do(curl.request)
 	if err != nil {
-		exception.Raise(err.Error(), exception.WARNING)
+		if curl.raiseException {
+			exception.Raise(err.Error(), exception.WARNING)
+		}
+
 		return "", errors.New("error ao conectar a url" + curl.url)
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		exception.Raise(err.Error(), exception.WARNING)
+		if curl.raiseException {
+			exception.Raise(err.Error(), exception.WARNING)
+		}
+
 		return "", errors.New("erro ao ler o conteudo do body " + curl.url)
 	}
 
@@ -211,7 +231,10 @@ func (curl *CURL) createClient() *http.Client {
 	if len(_proxyURL) > 5 {
 		urlProxy, err := url.Parse(_proxyURL)
 		if err != nil {
-			exception.Raise(err.Error(), exception.WARNING)
+			if curl.raiseException {
+				exception.Raise(err.Error(), exception.WARNING)
+			}
+
 		} else {
 			transport.Proxy = http.ProxyURL(urlProxy)
 		}
