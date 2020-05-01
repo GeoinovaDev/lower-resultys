@@ -1,6 +1,7 @@
 package env
 
 import (
+	"git.resultys.com.br/lib/lower/io/dir"
 	"git.resultys.com.br/lib/lower/io/file"
 )
 
@@ -18,6 +19,7 @@ var current *Environment
 func New() *Environment {
 	return &Environment{
 		items: []string{},
+		path:  dir.Cwd(),
 	}
 }
 
@@ -26,14 +28,19 @@ func GetInstance() *Environment {
 	if current == nil {
 		current = New()
 
-		current.Add("production")
-		current.Add("develop")
-		current.Add("test")
+		current.Add("Production")
+		current.Add("Develop")
+		current.Add("Test")
 
 		current.loadEnv()
 	}
 
 	return current
+}
+
+// Stats ...
+func (e *Environment) Stats() string {
+	return e.current
 }
 
 // Add ...
@@ -102,11 +109,11 @@ func (e *Environment) Run(params ...func()) bool {
 
 func (e *Environment) loadEnv() {
 	if file.Exist(e.path + "/.__develop__") {
-		e.Set("develop")
+		e.Set("Develop")
 	} else if file.Exist(e.path + "/.__test__") {
-		e.Set("test")
+		e.Set("Test")
 	} else {
-		e.Set("production")
+		e.Set("Production")
 	}
 }
 
