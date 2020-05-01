@@ -1,6 +1,9 @@
 package file
 
-import "io/ioutil"
+import (
+	"io/ioutil"
+	"os"
+)
 
 // GetContent ...
 func GetContent(filename string) string {
@@ -16,4 +19,13 @@ func GetContent(filename string) string {
 // WriteContent ...
 func WriteContent(filename string, content string) {
 	ioutil.WriteFile(filename, []byte(content), 0644)
+}
+
+// Exist ...
+func Exist(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
 }
