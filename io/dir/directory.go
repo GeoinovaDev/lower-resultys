@@ -3,7 +3,21 @@ package dir
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 )
+
+// BasePath ...
+func BasePath() string {
+	_, b, _, _ := runtime.Caller(0)
+	return filepath.Dir(b)
+}
+
+// Cwd ..
+func Cwd() string {
+	d, _ := os.Getwd()
+
+	return d
+}
 
 // Remove remove diretorio e todo conteudo
 func Remove(dir string) error {
