@@ -87,14 +87,25 @@ func (e *Environment) GetVarString(params ...interface{}) string {
 }
 
 // GetVarInt ...
-func (e *Environment) GetVarInt(params ...interface{}) (int, bool) {
+func (e *Environment) GetVarInt(params ...interface{}) int {
 	v, b := e.GetVar(params...)
 
 	if !b {
-		return -1, false
+		return -1000
 	}
 
-	return v.(int), true
+	return v.(int)
+}
+
+// GetVarBool ...
+func (e *Environment) GetVarBool(params ...interface{}) bool {
+	v, b := e.GetVar(params...)
+
+	if !b {
+		return false
+	}
+
+	return v.(bool)
 }
 
 // Run ...

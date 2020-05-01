@@ -40,6 +40,18 @@ func (t *Interval) Repeat(second int, callback func()) *Interval {
 	return t
 }
 
+// Wait ...
+func (t *Interval) Wait(second int, callback func()) *Interval {
+	go func() {
+		time.Sleep(time.Duration(second) * time.Second)
+		if t.overflow {
+			callback()
+		}
+	}()
+
+	return t
+}
+
 // Timeout executa o callback depoois de 'second' segundos
 func (t *Interval) Timeout(second int, callback func()) *Interval {
 	go func() {
