@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strconv"
 
 	"git.resultys.com.br/lib/lower/config"
 	"git.resultys.com.br/lib/lower/exception"
@@ -27,6 +28,18 @@ func (qs QueryString) Get(key string) string {
 	}
 
 	return ""
+}
+
+// GetInt ...
+func (qs QueryString) GetInt(key string) int {
+	value := qs.Get(key)
+	v, err := strconv.Atoi(value)
+
+	if err != nil {
+		return 0
+	}
+
+	return v
 }
 
 func createServer() *http.Server {
