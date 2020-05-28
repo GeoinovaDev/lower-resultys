@@ -127,7 +127,7 @@ func (curl *CURL) PostJSON(obj interface{}) (string, error) {
 			exception.Raise(err.Error(), exception.WARNING)
 		}
 
-		return "", errors.New("erro ao codificar o json")
+		return "", errors.New("erro ao codificar o json = " + err.Error())
 	}
 
 	err = curl.createRequest("POST", string(_json))
@@ -176,7 +176,7 @@ func (curl *CURL) createRequest(method string, data string) error {
 			exception.Raise(err.Error(), exception.WARNING)
 		}
 
-		return errors.New("erro ao criar a request")
+		return errors.New("erro ao criar a request = " + err.Error())
 	}
 
 	curl.request = req
@@ -194,7 +194,7 @@ func (curl *CURL) sendRequest() (string, error) {
 			exception.Raise(err.Error(), exception.WARNING)
 		}
 
-		return "", errors.New("error ao conectar a url" + curl.url)
+		return "", errors.New("error ao conectar a url " + curl.url + " = " + err.Error())
 	}
 	defer resp.Body.Close()
 
@@ -204,7 +204,7 @@ func (curl *CURL) sendRequest() (string, error) {
 			exception.Raise(err.Error(), exception.WARNING)
 		}
 
-		return "", errors.New("erro ao ler o conteudo do body " + curl.url)
+		return "", errors.New("erro ao ler o conteudo do body " + curl.url + " = " + err.Error())
 	}
 
 	curl.Status = resp.StatusCode
