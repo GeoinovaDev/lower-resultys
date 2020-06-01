@@ -119,11 +119,13 @@ func (tx *Tryx) run(code func(), cbSuccess func(), cbErr func(string)) {
 }
 
 // Catch ...
-func (tx *Tryx) Catch(code func(string)) {
+func (tx *Tryx) Catch(code func(string)) *Tryx {
 	tx.cbCatch = code
 	tx.cacheCatch = true
 
 	if tx.throw {
 		code(tx.err)
 	}
+
+	return tx
 }
