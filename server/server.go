@@ -89,7 +89,7 @@ func OnPost(route string, handler func(QueryString, string) string) {
 		exec.Try(func() {
 
 			w.Header().Set("Access-Control-Allow-Origin", "*")
-			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, x-requested-with")
 
 			text := handler(qs, data)
 			fmt.Fprint(w, text)
