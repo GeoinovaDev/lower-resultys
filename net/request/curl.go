@@ -63,6 +63,20 @@ func (curl *CURL) AddHeader(key string, value string) *CURL {
 	return curl
 }
 
+// ExistHeader ...
+func (curl *CURL) ExistHeader(key string) bool {
+	if _, b := curl.headers[key]; b {
+		return true
+	}
+
+	return false
+}
+
+// GetHeader ...
+func (curl *CURL) GetHeader(key string) string {
+	return curl.headers[key]
+}
+
 // Get faz um request GET
 // Retorna o body como string e o error
 // Salva no sistema de log caso ocorra erro
@@ -259,5 +273,9 @@ func (curl *CURL) createClient() *http.Client {
 	return &http.Client{
 		Timeout:   curl.timeout * time.Second,
 		Transport: transport,
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			curl.AddHeader("LastReferer", req.URL.String())
+			return nil
+		},
 	}
 }
