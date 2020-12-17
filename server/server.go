@@ -68,7 +68,7 @@ func OnGet(route string, handler func(QueryString) string) {
 		exec.Try(func() {
 
 			w.Header().Set("Access-Control-Allow-Origin", "*")
-			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, x-requested-with")
 
 			text := handler(qs)
 			fmt.Fprint(w, text)
