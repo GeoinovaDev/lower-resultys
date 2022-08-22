@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"git.resultys.com.br/lib/lower/exception"
+	"github.com/GeoinovaDev/lower-resultys/exception"
 )
 
 // ProxyURL contem o endereco do proxy no formato: http://dominio

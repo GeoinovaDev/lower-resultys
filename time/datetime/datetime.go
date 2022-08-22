@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"git.resultys.com.br/lib/lower/str"
+	"github.com/GeoinovaDev/lower-resultys/str"
 )
 
 // Datetime struct

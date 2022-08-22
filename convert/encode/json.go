@@ -3,7 +3,7 @@ package encode
 import (
 	"encoding/json"
 
-	"git.resultys.com.br/lib/lower/exception"
+	"github.com/GeoinovaDev/lower-resultys/exception"
 )
 
 // JSON encode

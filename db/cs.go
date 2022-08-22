@@ -1,7 +1,7 @@
 package db
 
 import (
-	"git.resultys.com.br/lib/lower/str"
+	"github.com/GeoinovaDev/lower-resultys/str"
 )
 
 // ConnectionString é a estrutura contendo informações de acesso ao banco

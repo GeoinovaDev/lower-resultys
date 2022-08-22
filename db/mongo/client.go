@@ -3,9 +3,9 @@ package mongo
 import (
 	"time"
 
-	"git.resultys.com.br/lib/lower/db/cstring"
-	"git.resultys.com.br/lib/lower/exception"
-	"git.resultys.com.br/lib/lower/exec"
+	"github.com/GeoinovaDev/lower-resultys/db/cstring"
+	"github.com/GeoinovaDev/lower-resultys/exception"
+	"github.com/GeoinovaDev/lower-resultys/exec"
 	mgo "gopkg.in/mgo.v2"
 )
 

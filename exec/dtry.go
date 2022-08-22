@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"git.resultys.com.br/lib/lower/exception"
+	"github.com/GeoinovaDev/lower-resultys/exception"
 )
 
 // TryExec é a estrutura contendo informações sobre a execução de uma função

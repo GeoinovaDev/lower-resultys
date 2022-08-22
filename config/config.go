@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"sync"
 
-	"git.resultys.com.br/lib/lower/exception"
+	"github.com/GeoinovaDev/lower-resultys/exception"
 )
 
 // File variável global contendo o filename default do config.json

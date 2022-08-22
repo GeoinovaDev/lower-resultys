@@ -1,8 +1,8 @@
 package env
 
 import (
-	"git.resultys.com.br/lib/lower/io/dir"
-	"git.resultys.com.br/lib/lower/io/file"
+	"github.com/GeoinovaDev/lower-resultys/io/dir"
+	"github.com/GeoinovaDev/lower-resultys/io/file"
 )
 
 // Environment ...

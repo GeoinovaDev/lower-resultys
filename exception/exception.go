@@ -3,9 +3,9 @@ package exception
 import (
 	"runtime"
 
-	"git.resultys.com.br/lib/lower/net/loopback"
-	"git.resultys.com.br/lib/lower/syslog"
-	"git.resultys.com.br/lib/lower/time/datetime"
+	"github.com/GeoinovaDev/lower-resultys/net/loopback"
+	"github.com/GeoinovaDev/lower-resultys/syslog"
+	"github.com/GeoinovaDev/lower-resultys/time/datetime"
 )
 
 // Tipo ...

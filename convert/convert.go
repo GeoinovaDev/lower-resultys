@@ -3,8 +3,8 @@ package convert
 import (
 	"encoding/json"
 
-	"git.resultys.com.br/lib/lower/convert/encode"
-	"git.resultys.com.br/lib/lower/exception"
+	"github.com/GeoinovaDev/lower-resultys/convert/encode"
+	"github.com/GeoinovaDev/lower-resultys/exception"
 )
 
 // HTTPBuildQuery ...

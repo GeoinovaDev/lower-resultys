@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"log"
 
-	"git.resultys.com.br/lib/lower/exception"
-	"git.resultys.com.br/lib/lower/exec/try"
+	"github.com/GeoinovaDev/lower-resultys/exception"
+	"github.com/GeoinovaDev/lower-resultys/exec/try"
 )
 
 // PGSql struct

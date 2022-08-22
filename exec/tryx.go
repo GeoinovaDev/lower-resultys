@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"git.resultys.com.br/lib/lower/backoff"
+	"github.com/GeoinovaDev/lower-resultys/backoff"
 )
 
 // TryxExec ...

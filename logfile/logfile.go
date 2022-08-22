@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"git.resultys.com.br/lib/lower/str"
+	"github.com/GeoinovaDev/lower-resultys/str"
 )
 
 // Log ...

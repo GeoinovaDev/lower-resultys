@@ -1,7 +1,7 @@
 package cstring
 
 import (
-	"git.resultys.com.br/lib/lower/db"
+	"github.com/GeoinovaDev/lower-resultys/db"
 )
 
 var list map[string]*db.ConnectionString

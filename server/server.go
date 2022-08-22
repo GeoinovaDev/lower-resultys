@@ -7,9 +7,9 @@ import (
 	"net/url"
 	"strconv"
 
-	"git.resultys.com.br/lib/lower/config"
-	"git.resultys.com.br/lib/lower/exception"
-	"git.resultys.com.br/lib/lower/exec"
+	"github.com/GeoinovaDev/lower-resultys/config"
+	"github.com/GeoinovaDev/lower-resultys/exception"
+	"github.com/GeoinovaDev/lower-resultys/exec"
 )
 
 // Port contém informação sobre a porta utilizada pelo servidor

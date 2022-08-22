@@ -3,7 +3,7 @@ package exec
 import (
 	"fmt"
 
-	"git.resultys.com.br/lib/lower/exception"
+	"github.com/GeoinovaDev/lower-resultys/exception"
 )
 
 // Loop executa infinitamente a função passada por parametro

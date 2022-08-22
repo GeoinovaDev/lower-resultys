@@ -1,7 +1,7 @@
 package net
 
 import (
-	"git.resultys.com.br/lib/lower/convert"
+	"github.com/GeoinovaDev/lower-resultys/convert"
 )
 
 // Protocol é o protocol utilizado para comunicação via rede contendo
