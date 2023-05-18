@@ -27,14 +27,28 @@ type CURL struct {
 	proxy          string
 	Status         int
 	raiseException bool
+	userAgent      string
+}
+
+type CURLOption func(*CURL)
+
+func WithUserAgent(ua string) CURLOption {
+	return func(c *CURL) {
+		c.userAgent = ua
+	}
 }
 
 // New cria uma request
-func New(url string) *CURL {
+func New(url string, options ...CURLOption) *CURL {
 	curl := &CURL{url: url}
 	curl.timeout = 60
 	curl.raiseException = false
 	curl.headers = make(map[string]string)
+
+	for _, option := range options {
+		option(curl)
+	}
+
 	return curl
 }
 
@@ -194,7 +208,7 @@ func (curl *CURL) createRequest(method string, data string) error {
 	}
 
 	curl.request = req
-	curl.request.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36")
+	curl.request.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36")
 	curl.request.Header.Set("Connection", "close")
 	curl.request.Close = true
 
